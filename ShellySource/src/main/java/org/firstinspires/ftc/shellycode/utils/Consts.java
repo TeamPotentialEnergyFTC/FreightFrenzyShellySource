@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.shellycode;
+package org.firstinspires.ftc.shellycode.utils;
 
 public class Consts {
     // java keyword rundown: public means anything can access it, static means one copy of it is stored across all classes, final means it cannot be changed, and type is the type
@@ -6,7 +6,9 @@ public class Consts {
     public static final double MIN_SPED = 0.2 / DEF_SPED;
     public static final double CLAW_MIN = 0.33;
     public static final double CLAW_MAX = 0.55;
-    public static final double ARM_VEL = 200; // tps
+    public static final int ARM_VEL = 200; // tps
+
+    public static final double AUTO_DEF_SPED = 0.3f;
 
     public static final String VUFORIA_LIC = "AaA6S6z/////AAABmV078v8AB0xvlFA/9/1fGo8zx6NXlIu8aWH27hfz7bV0U1p5+AQ6El5oes2ysLtsVrpoE2GNAhCP1EhiXg0CQ68NhZv5Cp7xqfYmrvS/udZqLk5rb/9OLWexy37awrSeCT24N+bCA5VZtH91f2F3o4cYe+OvEsRYS4pEb1mdMAqnPTQttuvQw64MTQt4MQbuheCiWHfgyw+nBFbrgY1/0gtHj6Fn8naqHz3NjbOfDCntG1WJhwt8FJK3LS1AQnswzBDt2krVwe2tBvZ68EcL76mAc7QXkYM2YB4cvqUwPTzc6ZE2vgRvzkjeZ7YWHpftWrj+LOQFhaXgv5MgQdwuxQajpDBDoQGahFc/SqPTrDqF";
     private static final String TFL_MODEL = "";

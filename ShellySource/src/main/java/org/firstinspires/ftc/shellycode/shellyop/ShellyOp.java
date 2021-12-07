@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.shellycode;
+package org.firstinspires.ftc.shellycode.shellyop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -6,12 +6,16 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.shellycode.Motors;
+import org.firstinspires.ftc.shellycode.utils.Consts;
+import org.firstinspires.ftc.shellycode.utils.IntervalPhotos;
+
 @TeleOp(name="ShellyOp", group="TellyOp")
 public class ShellyOp extends OpMode {
-    private Motors motors;
-    private IntervalPhotos intervalPhotos;
+    private Motors motors = new Motors(hardwareMap);
+    private IntervalPhotos intervalPhotos = new IntervalPhotos(hardwareMap, telemetry, 5);
 
-    private ElapsedTime elapsed;
+    private ElapsedTime runtime;
 
     private double xdir;
     private double ydir;
@@ -27,12 +31,11 @@ public class ShellyOp extends OpMode {
 
     @Override
     public void init() {
-        motors = new Motors(hardwareMap);
-        intervalPhotos = new IntervalPhotos(hardwareMap, telemetry, 5);
+        telemetry.addData("Status", "Initialized");
     }
 
     @Override
-    public void start() { elapsed.reset(); }
+    public void start() { runtime.reset(); }
 
     @Override
     public void loop() {
@@ -86,6 +89,6 @@ public class ShellyOp extends OpMode {
         telemetry.addData("Attachment Telem", "Right Stick [x] (%.2f), Left Stick [y] (%.2f), Claw Pos (%.2f)", gamepad2.right_stick_x, gamepad2.left_stick_y, motors.claw.getPosition());
         telemetry.addData("Arm Encoder Pos, Arm Target Pos",  "(%.2f), (%.2f)", motors.arm.getCurrentPosition(), motors.arm.getTargetPosition());
 
-        telemetry.addData("Elapsed Time",  "(%.2f)", elapsed.toString());
+        telemetry.addData("Elapsed Time",  "(%.2f)", runtime.toString());
     }
 }

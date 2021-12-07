@@ -9,14 +9,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Motors {
-    DcMotor lfd;
-    DcMotor rfd;
-    DcMotor lbd;
-    DcMotor rbd;
-    DcMotor quackapult;
-    DcMotorEx arm;
-    Servo claw;
-    CRServo spinny;
+    public DcMotor lfd;
+    public DcMotor rfd;
+    public DcMotor lbd;
+    public DcMotor rbd;
+    public DcMotor quackapult;
+    public DcMotorEx arm;
+    public Servo claw;
+    public CRServo spinny;
 
     private HardwareMap hm;
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.shellycode;
+package org.firstinspires.ftc.shellycode.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 
 public class IntervalPhotos {
     private final String TAG = "Interval Images";
-    private ElapsedTime elapsedTime;
+    private ElapsedTime runtime;
 
     private final Telemetry telem;
 
@@ -80,8 +80,8 @@ public class IntervalPhotos {
 
     public void update() {
         try {
-            if (elapsedTime.seconds() >= captureDelay) {
-                elapsedTime.reset();
+            if (runtime.seconds() >= captureDelay) {
+                runtime.reset();
                 Bitmap bmp = frameQueue.poll();
                 if (bmp != null) {
                     onNewFrame(bmp);
