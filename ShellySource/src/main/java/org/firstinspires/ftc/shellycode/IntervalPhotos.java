@@ -6,14 +6,12 @@ import android.os.Handler;
 
 import androidx.annotation.NonNull;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.android.util.Size;
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
@@ -39,10 +37,11 @@ import java.util.Locale;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-@TeleOp(name="Interval Photos", group="AutoShelly")
-public class IntervalPhotos extends OpMode {
-    private String TAG = "Images On Intervals";
-    private ElapsedTime runtime = new ElapsedTime();
+public class IntervalPhotos {
+    private final String TAG = "Interval Images";
+    private ElapsedTime elapsedTime;
+
+    private final Telemetry telem;
 
     private CameraManager cameraManager;
     private WebcamName cameraName;
@@ -57,18 +56,18 @@ public class IntervalPhotos extends OpMode {
     // utility that determines where callbacks from the camera are to run
     private Handler callbackHandler;
 
-    private boolean buttonPressSeen = false;
-    private boolean captureWhenAvailable = false;
-
     private int captureCounter = 0;
+    private final int captureDelay;
 
-    @Override
-    public void init() {
+    public IntervalPhotos(HardwareMap hm, Telemetry telem, int captureDelay) {
+        this.telem = telem;
+
         callbackHandler = CallbackLooper.getDefault().getHandler();
 
         cameraManager = ClassFactory.getInstance().getCameraManager();
-        cameraName = hardwareMap.get(WebcamName.class, "cam");
+        cameraName = hm.get(WebcamName.class, "cam");
 
+        this.captureDelay = captureDelay;
         initializeFrameQueue(1000);
         AppUtil.getInstance().ensureDirectoryExists(captureDirectory);
 
@@ -77,21 +76,14 @@ public class IntervalPhotos extends OpMode {
 
         startCamera();
         if (cameraCaptureSession == null) return;
-
     }
 
-    @Override
-    public void loop() {
+    public void update() {
         try {
-            if (runtime.seconds() >= 5) {
-                runtime.reset();
-                captureWhenAvailable = true;
-            }
-
-            if (captureWhenAvailable) {
+            if (elapsedTime.seconds() >= captureDelay) {
+                elapsedTime.reset();
                 Bitmap bmp = frameQueue.poll();
                 if (bmp != null) {
-                    captureWhenAvailable = false;
                     onNewFrame(bmp);
                 }
             }
@@ -149,14 +141,13 @@ public class IntervalPhotos extends OpMode {
                 @Override
                 public void onConfigured(@NonNull CameraCaptureSession session) {
                     try {
-                        /** The session is ready to go. Start requesting frames */
+                        // start requesting frames
                         final CameraCaptureRequest captureRequest = camera.createCaptureRequest(imageFormat, size, fps);
                         session.startCapture(captureRequest,
                                 new CameraCaptureSession.CaptureCallback() {
                                     @Override
                                     public void onNewFrame(@NonNull CameraCaptureSession session, @NonNull CameraCaptureRequest request, @NonNull CameraFrame cameraFrame) {
-                                        /** A new frame is available. The frame data has <em>not</em> been copied for us, and we can only access it
-                                         * for the duration of the callback. So we copy here manually. */
+                                        // new frame available
                                         Bitmap bmp = captureRequest.createEmptyBitmap();
                                         cameraFrame.copyToBitmap(bmp);
                                         frameQueue.offer(bmp);
@@ -170,7 +161,8 @@ public class IntervalPhotos extends OpMode {
                                 })
                         );
                         synchronizer.finish(session);
-                    } catch (CameraException | RuntimeException e) {
+                    }
+                    catch (CameraException | RuntimeException e) {
                         RobotLog.ee(TAG, e, "exception starting capture");
                         error("exception starting capture");
                         session.close();
@@ -178,20 +170,20 @@ public class IntervalPhotos extends OpMode {
                     }
                 }
             }));
-        } catch (CameraException | RuntimeException e) {
+        }
+        catch (CameraException | RuntimeException e) {
             RobotLog.ee(TAG, e, "exception starting camera");
             error("exception starting camera");
             synchronizer.finish(null);
         }
 
-        /** Wait for all the asynchrony to complete */
         try {
             synchronizer.await();
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
 
-        /** Retrieve the created session. This will be null on error. */
         cameraCaptureSession = synchronizer.getValue();
     }
 
@@ -211,14 +203,8 @@ public class IntervalPhotos extends OpMode {
         }
     }
 
-    private void error(String msg) {
-        telemetry.log().add(msg);
-        telemetry.update();
-    }
-
     private void error(String format, Object... args) {
-        telemetry.log().add(format, args);
-        telemetry.update();
+        telem.log().add(format, args);
     }
 
     private boolean contains(int[] array, int value) {
@@ -233,7 +219,7 @@ public class IntervalPhotos extends OpMode {
         try {
             try (FileOutputStream outputStream = new FileOutputStream(file)) {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                telemetry.log().add("captured %s", file.getName());
+                telem.addData("captured %s", file.getName());
             }
         } catch (IOException e) {
             RobotLog.ee(TAG, e, "exception in saveBitmap()");
