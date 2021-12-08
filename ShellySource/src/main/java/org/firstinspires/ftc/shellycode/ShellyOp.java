@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.shellycode.shellyop;
+package org.firstinspires.ftc.shellycode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -6,8 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.shellycode.Motors;
-import org.firstinspires.ftc.shellycode.utils.Consts;
+import org.firstinspires.ftc.shellycode.utils.Motors;
 import org.firstinspires.ftc.shellycode.utils.IntervalPhotos;
 
 @TeleOp(name="ShellyOp", group="TellyOp")
@@ -26,8 +25,6 @@ public class ShellyOp extends OpMode {
 
     private boolean bDownLastUpdate = false;
     private boolean spinnyOptout = false;
-
-    private int armPos;
 
     @Override
     public void init() {
@@ -78,10 +75,14 @@ public class ShellyOp extends OpMode {
         // ---
         motors.quackapult.setPower(gamepad2.right_stick_x);
 
-        armPos += Math.round(gamepad2.left_stick_y * 100); // should return a %-like value which is actually adding that many ticks to move
-        motors.arm.setTargetPosition(armPos);
-        motors.arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        motors.arm.setVelocity(Consts.ARM_VEL);
+        if (gamepad2.left_stick_y == 0) {
+            motors.arm.setTargetPosition(motors.arm.getCurrentPosition());
+            motors.arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            motors.arm.setVelocity(Consts.ARM_VEL);
+        }
+        else {
+            motors.arm.setPower(gamepad2.left_stick_y * Consts.ARM_GAIN);
+        }
 
         motors.claw.setPosition(Range.clip(gamepad2.right_trigger, Consts.CLAW_MIN, Consts.CLAW_MAX)); // min and max to not grind servo
         motors.spinny.setPower(spinnyOptout ? 0 : Range.clip(Consts.CLAW_MAX - gamepad2.right_trigger, 0, 1)); // speed is controlled by the claw

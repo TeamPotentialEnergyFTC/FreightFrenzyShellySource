@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.shellycode;
+package org.firstinspires.ftc.shellycode.utils;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -6,9 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
 public class Motors {
+    private final HardwareMap hm;
     public DcMotor lfd;
     public DcMotor rfd;
     public DcMotor lbd;
@@ -17,8 +16,6 @@ public class Motors {
     public DcMotorEx arm;
     public Servo claw;
     public CRServo spinny;
-
-    private HardwareMap hm;
 
     public Motors(HardwareMap hardwareMap) {
         hm = hardwareMap;
