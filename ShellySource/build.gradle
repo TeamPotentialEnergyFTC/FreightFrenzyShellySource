@@ -11,5 +11,6 @@ android {
 
 dependencies {
     implementation project(':RobotController')
+    implementation project(path: ':ocv')
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
 }
