@@ -8,7 +8,6 @@ android {
     }
 }
 
-
 dependencies {
     implementation project(':RobotController')
     implementation project(path: ':ocv')
