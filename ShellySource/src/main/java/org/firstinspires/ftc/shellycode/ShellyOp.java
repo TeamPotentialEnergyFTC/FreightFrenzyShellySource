@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.shellycode;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,12 +11,10 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.shellycode.utils.ButtonState;
 import org.firstinspires.ftc.shellycode.utils.Motors;
-import org.firstinspires.ftc.shellycode.utils.IntervalPhotos;
 
 @TeleOp(name="ShellyOp", group="TellyOp")
 public class ShellyOp extends OpMode {
     private Motors motors;
-    IntervalPhotos intervalPhotosRunnable;
 
     private ElapsedTime runtime;
 
@@ -33,10 +33,6 @@ public class ShellyOp extends OpMode {
     @Override
     public void init() {
         motors = new Motors(hardwareMap);
-
-        intervalPhotosRunnable = new IntervalPhotos(hardwareMap, telemetry,5000);
-        Thread intervalPhotosThread = new Thread(intervalPhotosRunnable);
-        intervalPhotosThread.start();
 
         b = new ButtonState(false);
         x = new ButtonState(false);
@@ -95,10 +91,5 @@ public class ShellyOp extends OpMode {
         telemetry.addData("spinny power",  "%.2f", motors.spinny.getPower());
 
         telemetry.addData("Arm Encoder Pos, Arm Target Pos",  "%d, %d", motors.arm.getCurrentPosition(), motors.arm.getTargetPosition());
-    }
-
-    @Override
-    public void stop() {
-        intervalPhotosRunnable.doStop();
     }
 }
