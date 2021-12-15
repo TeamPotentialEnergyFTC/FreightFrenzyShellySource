@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.shellycode;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -10,13 +11,19 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.shellycode.utils.ButtonState;
+import org.firstinspires.ftc.shellycode.utils.Camera;
 import org.firstinspires.ftc.shellycode.utils.Motors;
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @TeleOp(name="ShellyOp", group="TellyOp")
 public class ShellyOp extends OpMode {
     private Motors motors;
-
-    private ElapsedTime runtime;
+    Camera camera;
 
     private double xdir;
     private double ydir;
@@ -33,14 +40,23 @@ public class ShellyOp extends OpMode {
     @Override
     public void init() {
         motors = new Motors(hardwareMap);
+        camera = new Camera(hardwareMap);
 
         b = new ButtonState(false);
         x = new ButtonState(false);
+
+        // take a photo every 5 seconds
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss@dd_MM_yyyy");
+        Runnable captureRunnable = () -> {
+            camera.saveBitmap(camera.captureBitmap(), dtf.format(LocalDateTime.now()));
+        };
+
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(captureRunnable, 0, 15, TimeUnit.SECONDS);
     }
 
     @Override
     public void loop() {
-
         // ---
         // motor controls
         // ---
@@ -89,7 +105,11 @@ public class ShellyOp extends OpMode {
         motors.spinny.setPower(b.isPressed() ? 0 : clawCoefficient * Range.clip(Consts.CLAW_MAX - gamepad2.right_trigger, 0, 1)); // speed is controlled by the claw
 
         telemetry.addData("spinny power",  "%.2f", motors.spinny.getPower());
-
         telemetry.addData("Arm Encoder Pos, Arm Target Pos",  "%d, %d", motors.arm.getCurrentPosition(), motors.arm.getTargetPosition());
+    }
+
+    @Override
+    public void stop() {
+        camera.close();
     }
 }

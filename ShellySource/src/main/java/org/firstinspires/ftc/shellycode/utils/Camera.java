@@ -1,202 +1,62 @@
 package org.firstinspires.ftc.shellycode.utils;
 
 import android.graphics.Bitmap;
-import android.graphics.ImageFormat;
-import android.os.Handler;
-
-import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.android.util.Size;
-import org.firstinspires.ftc.robotcore.external.function.Consumer;
-import org.firstinspires.ftc.robotcore.external.function.Continuation;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureRequest;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureSequenceId;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureSession;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCharacteristics;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraException;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraFrame;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraManager;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.internal.collections.EvictingBlockingQueue;
-import org.firstinspires.ftc.robotcore.internal.network.CallbackLooper;
-import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-import org.firstinspires.ftc.robotcore.internal.system.ContinuationSynchronizer;
-import org.firstinspires.ftc.robotcore.internal.system.Deadline;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CloseableFrame;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.Parameters;
+import org.firstinspires.ftc.shellycode.Consts;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Locale;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 public class Camera {
-    private final String TAG = "Camera";
-
-    private final File captureDirectory = AppUtil.ROBOT_DATA_DIR;
-    private final CameraManager cameraManager;
-    private final WebcamName cameraName;
-    private org.firstinspires.ftc.robotcore.external.hardware.camera.Camera camera;
-    private CameraCaptureSession cameraCaptureSession;
-    // bitmap queue where frames are placed when they become available
-    private EvictingBlockingQueue<Bitmap> frameQueue;
-    // utility that determines where callbacks from the camera are to run
-    private final Handler callbackHandler;
-
-    private int captureCounter = 0;
+    private VuforiaLocalizer vuforia;
 
     public Camera(HardwareMap hm) {
-        callbackHandler = CallbackLooper.getDefault().getHandler();
+        Parameters parameters = new VuforiaLocalizer.Parameters();
+        parameters.vuforiaLicenseKey = Consts.VUFORIA_LIC;
+        parameters.cameraName = hm.get(WebcamName.class, "cam");
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
-        cameraManager = ClassFactory.getInstance().getCameraManager();
-        cameraName = hm.get(WebcamName.class, "cam");
-
-        initializeFrameQueue(10000);
-        AppUtil.getInstance().ensureDirectoryExists(captureDirectory);
-
-        openCamera();
-        if (camera == null) return;
-
-        startCamera();
-        if (cameraCaptureSession == null) return;
+        vuforia.setFrameQueueCapacity(1); // always want most recent
+        vuforia.enableConvertFrameToBitmap(); // why do you have to enable this, what would it hurt to have it on by default?
     }
 
-    public void capture() {
+    public Bitmap captureBitmap() {
         try {
-            Bitmap bmp = frameQueue.poll();
-            if (bmp != null) {
-                onNewFrame(bmp);
-            }
-        }
-        catch (Exception e) {
-            RobotLog.e("Some error", e);
-        }
-    }
+            CloseableFrame frame = vuforia.getFrameQueue().take();
+            Bitmap bmp = vuforia.convertFrameToBitmap(frame);
 
-    // save frame
-    private void onNewFrame(Bitmap frame) {
-        saveBitmap(frame);
-        frame.recycle();
-    }
+            frame.close(); // not sure what this does... assuming closeable frame expects you to close it lol
 
-    private void initializeFrameQueue(int capacity) {
-        frameQueue = new EvictingBlockingQueue<Bitmap>(new ArrayBlockingQueue<Bitmap>(capacity));
-        frameQueue.setEvictAction(new Consumer<Bitmap>() {
-            @Override
-            public void accept(Bitmap frame) {
-                frame.recycle();
-            }
-        });
-    }
-
-    private void openCamera() {
-        if (camera != null) return;
-
-        Deadline deadline = new Deadline(60, TimeUnit.SECONDS);
-        camera = cameraManager.requestPermissionAndOpenCamera(deadline, cameraName, null);
-        if (camera == null) {
-            return;
-        }
-    }
-
-    private void startCamera() {
-        if (cameraCaptureSession != null) return;
-
-        final int imageFormat = ImageFormat.YUY2;
-
-        CameraCharacteristics cameraCharacteristics = cameraName.getCameraCharacteristics();
-        if (!contains(cameraCharacteristics.getAndroidFormats(), imageFormat)) {
-            return;
-        }
-        final Size size = cameraCharacteristics.getDefaultSize(imageFormat);
-        final int fps = cameraCharacteristics.getMaxFramesPerSecond(imageFormat, size);
-
-        /** Some of the logic below runs asynchronously on other threads. Use of the synchronizer
-         * here allows us to wait in this method until all that asynchrony completes before returning. */
-        final ContinuationSynchronizer<CameraCaptureSession> synchronizer = new ContinuationSynchronizer<>();
-        try {
-            /** Create a session in which requests to capture frames can be made */
-            camera.createCaptureSession(Continuation.create(callbackHandler, new CameraCaptureSession.StateCallbackDefault() {
-                @Override
-                public void onConfigured(@NonNull CameraCaptureSession session) {
-                    try {
-                        // start requesting frames
-                        final CameraCaptureRequest captureRequest = camera.createCaptureRequest(imageFormat, size, fps);
-                        session.startCapture(captureRequest,
-                                new CameraCaptureSession.CaptureCallback() {
-                                    @Override
-                                    public void onNewFrame(@NonNull CameraCaptureSession session, @NonNull CameraCaptureRequest request, @NonNull CameraFrame cameraFrame) {
-                                        // new frame available
-                                        Bitmap bmp = captureRequest.createEmptyBitmap();
-                                        cameraFrame.copyToBitmap(bmp);
-                                        frameQueue.offer(bmp);
-                                    }
-                                },
-                                Continuation.create(callbackHandler, new CameraCaptureSession.StatusCallback() {
-                                    @Override
-                                    public void onCaptureSequenceCompleted(@NonNull CameraCaptureSession session, CameraCaptureSequenceId cameraCaptureSequenceId, long lastFrameNumber) {
-                                        RobotLog.ii(TAG, "capture sequence %s reports completed: lastFrame=%d", cameraCaptureSequenceId, lastFrameNumber);
-                                    }
-                                })
-                        );
-                        synchronizer.finish(session);
-                    } catch (CameraException | RuntimeException e) {
-                        RobotLog.ee(TAG, e, "exception starting capture");
-                        session.close();
-                        synchronizer.finish(null);
-                    }
-                }
-            }));
-        } catch (CameraException | RuntimeException e) {
-            RobotLog.ee(TAG, e, "exception starting camera");
-            synchronizer.finish(null);
-        }
-
-        try {
-            synchronizer.await();
+            return bmp;
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-
-        cameraCaptureSession = synchronizer.getValue();
-    }
-
-    private void stopCamera() {
-        if (cameraCaptureSession != null) {
-            cameraCaptureSession.stopCapture();
-            cameraCaptureSession.close();
-            cameraCaptureSession = null;
+            RobotLog.e("Bitmap Capture Interrupted:", e);
+            return null;
         }
     }
 
-    public void closeCamera() {
-        stopCamera();
-        if (camera != null) {
-            camera.close();
-            camera = null;
-        }
-    }
-
-    private boolean contains(int[] array, int value) {
-        for (int i : array) {
-            if (i == value) return true;
-        }
-        return false;
-    }
-
-    private void saveBitmap(Bitmap bitmap) {
-        File file = new File(captureDirectory, String.format(Locale.getDefault(), "webcam-frame-%d.jpg", captureCounter++));
-        try {
-            try (FileOutputStream outputStream = new FileOutputStream(file)) {
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                RobotLog.i("captured %s", file.getName());
-            }
+    public void saveBitmap(Bitmap bmp, String name) {
+        RobotLog.i(name);
+        File file = new File(Consts.CAPTURE_DIR, name + ".jpg");
+        try (FileOutputStream outputStream = new FileOutputStream(file)) {
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+        } catch (FileNotFoundException e) {
+            RobotLog.e("File Not Found: ", e);
         } catch (IOException e) {
-            RobotLog.ee(TAG, e, "exception in saveBitmap()");
+            RobotLog.e("IO Exception: ", e);
         }
+    }
+
+    public void close() {
+        vuforia.getCamera().close();
     }
 }

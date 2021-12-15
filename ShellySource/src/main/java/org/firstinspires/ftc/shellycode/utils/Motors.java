@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Motors {
-    private final HardwareMap hm;
     public DcMotor lfd;
     public DcMotor rfd;
     public DcMotor lbd;
@@ -17,9 +16,7 @@ public class Motors {
     public Servo claw;
     public CRServo spinny;
 
-    public Motors(HardwareMap hardwareMap) {
-        hm = hardwareMap;
-
+    public Motors(HardwareMap hm) {
         // where l: left, f: front, d: drive, r: right, b: back (less writing on annoying Driver Hub keyboard)
         lfd = hm.get(DcMotor.class, "lfd"); // left front
         rfd = hm.get(DcMotor.class, "rfd"); // right front
