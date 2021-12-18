@@ -13,6 +13,7 @@ import com.vuforia.Vuforia;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.internal.android.dx.util.ByteArray;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,18 +38,20 @@ public class TestOp1 extends OpMode {
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
         vuforia.setFrameQueueCapacity(1);
-        vuforia.enableConvertFrameToBitmap();
 
         try {
             VuforiaLocalizer.CloseableFrame frame = vuforia.getFrameQueue().take();
-            Bitmap bmp = vuforia.convertFrameToBitmap(frame);
 
-            File file = new File(Consts.CAPTURE_DIR, "epic-bmp.jpg");
-            try (FileOutputStream outputStream = new FileOutputStream(file)) {
-                bmp.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            Image image = frame.getImage(0);
+            byte[] pixVals = image.getPixels().array();
+
+            for (byte byt : pixVals) {
+                RobotLog.i(String.valueOf(byt));
+//                telemetry.log().add(String.valueOf(byt));
             }
+
             frame.close();
-        } catch (InterruptedException | IOException e) {
+        } catch (InterruptedException e) {
             telemetry.log().add("nope", e);
         }
     }
