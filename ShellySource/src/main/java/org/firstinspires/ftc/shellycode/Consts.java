@@ -13,8 +13,8 @@ public class Consts {
     public static final int ARM_VEL = 200; // tps
     public static final double ARM_GAIN = 0.6;
 
-    public static final double AUTO_DEF_SPED = 0.3f;
-    public static final double AUTO_MS_TOLERANCE = 50;
+    public static final double AUTO_DEF_SPED = 0.4f;
+    public static final double AUTO_MS_TOLERANCE = 200;
 
     public static final File CAPTURE_DIR = AppUtil.ROBOT_DATA_DIR;
 

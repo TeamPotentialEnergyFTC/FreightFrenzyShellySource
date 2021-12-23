@@ -20,6 +20,9 @@ public class AutonoOpRedRight extends OpMode {
 
     @Override
     public void start() {
+        runtime.reset();
+        motors.stopAll();
+
         motors.lbd.setPower(Consts.AUTO_DEF_SPED);
         motors.rfd.setPower(Consts.AUTO_DEF_SPED);
     }
@@ -28,9 +31,8 @@ public class AutonoOpRedRight extends OpMode {
     public void loop() {
         double ms = runtime.milliseconds();
 
-        if (Utils.inTolerantRange(ms, 3000, Consts.AUTO_MS_TOLERANCE)) {
-            motors.lbd.setPower(0);
-            motors.rfd.setPower(0);
+        if (Utils.inRange(ms, 3000, 4000)) {
+            motors.stopAll();
         }
     }
 }

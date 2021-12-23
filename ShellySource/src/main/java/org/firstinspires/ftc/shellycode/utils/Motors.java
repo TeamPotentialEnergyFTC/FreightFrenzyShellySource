@@ -40,4 +40,15 @@ public class Motors {
         spinny.setDirection(CRServo.Direction.FORWARD);
     }
 
+    public void stopAll() {
+        lfd.setPower(0);
+        rfd.setPower(0);
+        lbd.setPower(0);
+        rbd.setPower(0);
+        arm.setPower(0);
+        quackapult.setPower(0);
+        claw.setPosition(0);
+        spinny.setPower(0);
+    }
+
 }
