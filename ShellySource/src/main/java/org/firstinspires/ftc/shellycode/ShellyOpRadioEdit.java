@@ -12,7 +12,10 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.shellycode.utils.ButtonState;
 import org.firstinspires.ftc.shellycode.utils.Camera;
+import org.firstinspires.ftc.shellycode.utils.Da_Aaarm;
 import org.firstinspires.ftc.shellycode.utils.Motors;
+import org.firstinspires.ftc.shellycode.utils.Utils;
+import org.firstinspires.ftc.shellycode.utils.Utils.*;
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
@@ -20,10 +23,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-@TeleOp(name="ShellyOp", group="TellyOp")
-public class ShellyOp extends OpMode {
+@TeleOp(name="ShellyOpRadioEdit", group="TellyOp")
+public class ShellyOpRadioEdit extends OpMode {
     private Motors motors;
     Camera camera;
+    Da_Aaarm aArm;
 
     private double xdir;
     private double ydir;
@@ -34,16 +38,21 @@ public class ShellyOp extends OpMode {
 
     private int clawCoefficient = 1;
 
-    ButtonState b;
-    ButtonState x;
+    private ButtonState b;
+    private ButtonState x;
+    private ButtonState R1;
+
+    private int targetArmPosition = 0;
 
     @Override
     public void init() {
         motors = new Motors(hardwareMap);
         camera = new Camera(hardwareMap);
+        aArm = new Da_Aaarm(motors.arm);
 
         b = new ButtonState(false);
         x = new ButtonState(false);
+        R1 = new ButtonState(false);
 
         // take a photo every 5 seconds
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss@dd_MM_yyyy");
@@ -63,6 +72,7 @@ public class ShellyOp extends OpMode {
 
         b.setState(gamepad2.b);
         x.setState(gamepad2.x);
+        R1.setState(gamepad2.right_bumper);
 
         // ---
         // drive
@@ -85,28 +95,43 @@ public class ShellyOp extends OpMode {
 
         // ---
         // quackapult + arm + claw
-        // ---
+        // --- Utils.inTolerantRange(motors.arm.getCurrentPosition(), motors.arm.getTargetPosition(), motors.arm.getTargetPositionTolerance())
         motors.quackapult.setPower(gamepad2.right_stick_x);
 
-        if (gamepad2.left_stick_y == 0) {
-            motors.arm.setTargetPosition(motors.arm.getCurrentPosition());
-            motors.arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            motors.arm.setVelocity(Consts.ARM_VEL);
-        }
-        else {
+        if (gamepad2.left_stick_y != 0) {
+            targetArmPosition = 0;
             telemetry.addData("setting power", "(%.2f)", gamepad2.left_stick_y);
             motors.arm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
             motors.arm.setPower(gamepad2.left_stick_y * Consts.ARM_GAIN);
         }
+        else if (gamepad2.dpad_down) {
+            targetArmPosition = 159;
+        } else if (gamepad2.dpad_left) {
+            targetArmPosition = 311;
+        } else if (gamepad2.dpad_right) {
+            targetArmPosition = 520;
+        } else if (gamepad2.dpad_up) {
+            targetArmPosition = 703;
+        } else if (gamepad2.left_stick_y == 0 && targetArmPosition == 0) {
+            targetArmPosition = motors.arm.getCurrentPosition();
+        }
 
-        motors.claw.setPosition(Range.clip(gamepad2.right_trigger, Consts.CLAW_MIN, Consts.CLAW_MAX)); // min and max to not grind servo
+        motors.hold(motors.arm, targetArmPosition);
+
+        motors.claw.setPosition(Range.clip(Double.parseDouble(String.valueOf(R1.isPressed() ? 1 : 0)), Consts.CLAW_MIN, Consts.CLAW_MAX)); // min and max to not grind servo
 
         clawCoefficient = x.isPressed() ? 1 : -1;
-        motors.spinny.setPower(b.isPressed() ? 0 : clawCoefficient * Range.clip(Consts.CLAW_MAX - gamepad2.right_trigger, 0, 1)); // speed is controlled by the claw
+        motors.spinny.setPower(b.isPressed() ? clawCoefficient * (R1.isPressed() ? 0 : 1) : 0); // speed is controlled by the claw
 
-        telemetry.addData("spinny power",  "%.2f", motors.spinny.getPower());
-        telemetry.addData("Arm Encoder Pos, Arm Target Pos",  "%d, %d", motors.arm.getCurrentPosition(), motors.arm.getTargetPosition());
+        telemetry.addData("spinny power", "%.2f", motors.spinny.getPower());
+        telemetry.addData("Arm Encoder Pos, Arm Target Pos", "%d, %d", motors.arm.getCurrentPosition(), motors.arm.getTargetPosition());
+
+        if (gamepad2.back) {
+            telemetry.addData("BACK!", "back");
+            motors.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
     }
+
 
     @Override
     public void stop() {

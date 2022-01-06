@@ -34,7 +34,4 @@ public class Utils {
         return arr;
     }
 
-    public static boolean collidesWith(Shape shape, Shape other) {
-        return false; //shape.getBounds2D().intersects(other.getBounds2D());
-    }
 }

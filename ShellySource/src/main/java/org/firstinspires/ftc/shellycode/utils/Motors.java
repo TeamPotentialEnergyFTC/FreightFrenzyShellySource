@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.shellycode.Consts;
+
 public class Motors {
     public DcMotor lfd;
     public DcMotor rfd;
@@ -49,6 +51,12 @@ public class Motors {
         quackapult.setPower(0);
         claw.setPosition(0);
         spinny.setPower(0);
+    }
+
+    public void hold(DcMotorEx motor, int pos) {
+        motor.setTargetPosition(pos);
+        motor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        motor.setVelocity(Consts.ARM_VEL);
     }
 
 }
