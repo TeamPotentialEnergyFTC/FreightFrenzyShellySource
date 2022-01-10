@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.shellycode.Consts;
 
@@ -17,6 +18,8 @@ public class Motors {
     public DcMotorEx arm;
     public Servo claw;
     public CRServo spinny;
+
+    private boolean clawToggled = false;
 
     public Motors(HardwareMap hm) {
         // where l: left, f: front, d: drive, r: right, b: back (less writing on annoying Driver Hub keyboard)
@@ -57,6 +60,25 @@ public class Motors {
         motor.setTargetPosition(pos);
         motor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         motor.setVelocity(Consts.ARM_VEL);
+    }
+
+    public void toggleClaw() {
+        clawToggled = !clawToggled;
+        claw.setPosition(clawToggled ? Consts.CLAW_MAX : Consts.CLAW_MIN);
+    }
+
+    public void spin(double power) {
+        lbd.setPower(-power);
+        rfd.setPower(power);
+        lfd.setPower(power);
+        rbd.setPower(-power);
+    }
+
+    public void drive(double ydir, double xdir, double turn) {
+        lbd.setPower(ydir - turn);
+        rfd.setPower(ydir + turn);
+        lfd.setPower(xdir + turn);
+        rbd.setPower(xdir - turn);
     }
 
 }

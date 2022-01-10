@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.shellycode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.shellycode.Consts;
 import org.firstinspires.ftc.shellycode.utils.ButtonState;
 import org.firstinspires.ftc.shellycode.utils.Motors;
 
@@ -35,14 +33,14 @@ public class TestOp0 extends OpMode {
     public void init() {
         motors = new Motors(hardwareMap);
 
-        b = new ButtonState(false);
-        x = new ButtonState(false);
+        b = new ButtonState();
+        x = new ButtonState();
     }
 
     @Override
     public void loop() {
-        b.setState(gamepad2.b);
-        x.setState(gamepad2.x);
+        b.update(gamepad2.b);
+        x.update(gamepad2.x);
 
         turboGain = org.firstinspires.ftc.shellycode.Consts.DEF_SPED + Range.clip(gamepad1.left_trigger, 0, 1);
         snailGain = Range.clip(org.firstinspires.ftc.shellycode.Consts.DEF_SPED - Range.clip(gamepad1.right_trigger, 0, org.firstinspires.ftc.shellycode.Consts.DEF_SPED), org.firstinspires.ftc.shellycode.Consts.MIN_SPED, 1);
@@ -77,8 +75,8 @@ public class TestOp0 extends OpMode {
 
         motors.claw.setPosition(Range.clip(gamepad2.right_trigger, org.firstinspires.ftc.shellycode.Consts.CLAW_MIN, org.firstinspires.ftc.shellycode.Consts.CLAW_MAX)); // min and max to not grind servo
 
-        clawCoefficient = x.isPressed() ? 1 : -1;
-        motors.spinny.setPower(b.isPressed() ? 0 : clawCoefficient * Range.clip(Consts.CLAW_MAX - gamepad2.right_trigger, 0, 1)); // speed is controlled by the claw
+        clawCoefficient = x.buttonState ? 1 : -1;
+        motors.spinny.setPower(b.buttonState ? 0 : clawCoefficient * Range.clip(Consts.CLAW_MAX - gamepad2.right_trigger, 0, 1)); // speed is controlled by the claw
 
         telemetry.addData("spinny power",  "%.2f", motors.spinny.getPower());
 

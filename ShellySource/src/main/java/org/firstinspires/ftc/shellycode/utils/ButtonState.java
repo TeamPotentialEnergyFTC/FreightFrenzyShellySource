@@ -1,14 +1,10 @@
 package org.firstinspires.ftc.shellycode.utils;
 
 public class ButtonState {
-    private boolean buttonState;
+    public boolean buttonState = false;
     private boolean downLastUpdate = false;
 
-    public ButtonState(boolean curState) {
-        buttonState = curState;
-    }
-
-    public void setState(boolean curState) {
+    public void update(boolean curState) {
         if (curState && !downLastUpdate) {
             buttonState = !buttonState;
             downLastUpdate = true;
@@ -18,7 +14,4 @@ public class ButtonState {
         }
     }
 
-    public boolean isPressed() {
-        return buttonState;
-    }
 }

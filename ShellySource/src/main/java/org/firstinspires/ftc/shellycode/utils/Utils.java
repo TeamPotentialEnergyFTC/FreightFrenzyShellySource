@@ -14,8 +14,8 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class Utils {
-    public static boolean inTolerantRange(double value0, double value1, double tolerance) {
-        return (value0 >= value1 - tolerance && value0 <= value1 + tolerance);
+    public static boolean inTolerantRange(double compared, double comparator, double tolerance) {
+        return (compared >= comparator - tolerance && compared <= comparator + tolerance);
     }
 
     public static boolean inRange(double value, double rangeLow, double rangeHigh) {
