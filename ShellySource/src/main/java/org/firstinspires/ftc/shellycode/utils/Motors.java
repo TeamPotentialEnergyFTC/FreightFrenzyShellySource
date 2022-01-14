@@ -19,8 +19,6 @@ public class Motors {
     public Servo claw;
     public CRServo spinny;
 
-    private boolean clawToggled = false;
-
     public Motors(HardwareMap hm) {
         // where l: left, f: front, d: drive, r: right, b: back (less writing on annoying Driver Hub keyboard)
         lfd = hm.get(DcMotor.class, "lfd"); // left front
@@ -60,11 +58,6 @@ public class Motors {
         motor.setTargetPosition(pos);
         motor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         motor.setVelocity(Consts.ARM_VEL);
-    }
-
-    public void toggleClaw() {
-        clawToggled = !clawToggled;
-        claw.setPosition(clawToggled ? Consts.CLAW_MAX : Consts.CLAW_MIN);
     }
 
     public void spin(double power) {

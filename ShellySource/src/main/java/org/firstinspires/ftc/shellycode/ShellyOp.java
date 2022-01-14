@@ -112,7 +112,7 @@ public class ShellyOp extends OpMode {
             motors.hold(motors.arm, targetArmPosition);
         }
 
-        if (R1.buttonState) { motors.toggleClaw(); }
+        motors.claw.setPosition(R1.buttonState ? Consts.CLAW_MAX : Consts.CLAW_MIN);
 
         clawCoefficient = x.buttonState ? 1 : -1;
         motors.spinny.setPower(b.buttonState ? clawCoefficient * (R1.buttonState ? 0 : 1) : 0); // speed is controlled by the claw

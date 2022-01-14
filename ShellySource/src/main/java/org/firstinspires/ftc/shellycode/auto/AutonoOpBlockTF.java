@@ -82,8 +82,8 @@ public class AutonoOpBlockTF extends OpMode {
         runtime.reset();
 
         motors.lfd.setPower(Consts.AUTO_DEF_SPED);
-        motors.rbd.setPower(Consts.AUTO_DEF_SPED);
-        motors.toggleClaw();
+        motors.rbd.setPower(Consts.AUTO_DEF_SPED); // drive for 3s (3000ms)
+        motors.claw.setPosition(Consts.CLAW_MAX); // grab
         motors.hold(motors.arm, 25);
     }
 
@@ -99,7 +99,7 @@ public class AutonoOpBlockTF extends OpMode {
         }
         else if (Utils.inTolerantRange(ms, 4500, Consts.AUTO_MS_TOLERANCE)) {
             motors.stopAll();
-            motors.toggleClaw();
+            motors.claw.setPosition(Consts.CLAW_MIN); // drop
         }
         else if (Utils.inTolerantRange(ms, 5000, Consts.AUTO_MS_TOLERANCE)) {
             motors.lbd.setPower(-Consts.AUTO_DEF_SPED);
