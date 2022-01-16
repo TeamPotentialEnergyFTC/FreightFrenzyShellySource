@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
+  <Tracking>
+    <ImageTarget name="trucks" size="0.279400 0.215900" />
+    <ImageTarget name="truck" size="0.279400 0.215900" />
+    <ImageTarget name="boat" size="0.279400 0.215900" />
+    <ImageTarget name="airplane" size="0.279400 0.215900" />
+    <CylinderTarget name="NewSpringCyl" sideLength="0.070000"/>
+    <CylinderTarget name="SpringCyl" sideLength="0.110000"/>
+  </Tracking>
+</QCARConfig>

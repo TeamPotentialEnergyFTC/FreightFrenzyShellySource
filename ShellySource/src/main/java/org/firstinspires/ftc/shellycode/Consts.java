@@ -16,8 +16,9 @@ public class Consts {
     public static final double MIN_SPED = 0.2 / DEF_SPED;
     public static final double CLAW_MIN = 0.33;
     public static final double CLAW_MAX = 0.56;
-    public static final int ARM_VEL = 200; // tps
+    public static final int ARM_VEL = 300; // tps
     public static final double ARM_GAIN = 0.6;
+    public static final double SMOL_SPED = 0.03;
 
     public static final int[] ARM_LEVELS = { 159, 311, 520, 703 };
 
@@ -25,6 +26,7 @@ public class Consts {
     public static final double DIST_FRM_TARGET = 4;
     public static final double AUTO_MS_TOLERANCE = 200;
     public static final double AUTO_CAM_BARCODE_OFFSETS = 50; // in pixels I assume
+    public static final int LEVEL_RIGHT_OFFSET = 30;
 
     public static final File CAPTURE_DIR = AppUtil.ROBOT_DATA_DIR;
 
@@ -42,4 +44,5 @@ public class Consts {
     public static final float CAMERA_FORWARD_DISPLACEMENT = 10.0f * Consts.MM_PER_INCH; // forward distance from the center of the robot to the camera lens
     public static final float CAMERA_VERTICAL_DISPLACEMENT = 5.0f * Consts.MM_PER_INCH; // vertical distance of camera lens off the ground
     public static final float CAMERA_LEFT_DISPLACEMENT = -3.5f * Consts.MM_PER_INCH; // left distance from the center of the robot to the camera lens ([-] if right)
+
 }

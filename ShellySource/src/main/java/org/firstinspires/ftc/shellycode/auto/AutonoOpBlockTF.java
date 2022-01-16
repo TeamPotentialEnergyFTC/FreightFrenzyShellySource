@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -49,7 +50,7 @@ public class AutonoOpBlockTF extends OpMode {
         vuHelper.loadWallTargets();
 
         int tfId = hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        tfLiteHelper = new TFLiteHelper("shelly_27-1.tflite", LABELS, 0.65f, 512, 1, tfId, vuHelper.vulo);
+        tfLiteHelper = new TFLiteHelper(Consts.TFL_OD_MODEL, LABELS, 0.65f, 512, 1, tfId, vuHelper.vulo);
 
         cameraCenter = vuHelper.vulo.getCameraCalibration().getSize().getWidth() / 2;
 
@@ -60,12 +61,14 @@ public class AutonoOpBlockTF extends OpMode {
     public void init_loop() {
         if (tfLiteHelper.tfod == null) { return; }
 
+        // align right wheel of intake to tile line :D
         List<Recognition> updatedRecognitions = tfLiteHelper.tfod.getUpdatedRecognitions();
         if (updatedRecognitions != null) {
             telemetry.addData("Objects detected", updatedRecognitions.size());
 
             for (Recognition recognition : updatedRecognitions) {
                 telemetry.addData("Label", recognition.getLabel());
+                telemetry.addData("Confidence", recognition.getConfidence());
                 telemetry.addData("Top Left","(%.2f, %.2f)", recognition.getLeft(), recognition.getTop());
                 telemetry.addData("Bottom Right", "(%.2f, %.2f)", recognition.getRight(), recognition.getBottom());
                 telemetry.addData("-------", "-------");
@@ -73,6 +76,7 @@ public class AutonoOpBlockTF extends OpMode {
                 boxAverage = (recognition.getLeft() + recognition.getRight()) / 2;
 
                 barcodePos = (boxAverage < cameraCenter - Consts.AUTO_CAM_BARCODE_OFFSETS) ? 0 : (boxAverage > cameraCenter + Consts.AUTO_CAM_BARCODE_OFFSETS ? 2 : 1);
+                telemetry.addData("Barcode pos", barcodePos);
             }
         }
     }
@@ -81,71 +85,80 @@ public class AutonoOpBlockTF extends OpMode {
     public void start() {
         runtime.reset();
 
-        motors.lfd.setPower(Consts.AUTO_DEF_SPED);
-        motors.rbd.setPower(Consts.AUTO_DEF_SPED); // drive for 3s (3000ms)
         motors.claw.setPosition(Consts.CLAW_MAX); // grab
-        motors.hold(motors.arm, 25);
+        motors.hold(motors.arm, Consts.ARM_LEVELS[barcodePos]); // hold
+
+        // smol forward
+        motors.lbd.setPower(Consts.SMOL_SPED);
+        motors.rfd.setPower(Consts.SMOL_SPED);
+
+        // right
+        motors.lfd.setPower(Consts.AUTO_DEF_SPED);
+        motors.rbd.setPower(Consts.AUTO_DEF_SPED);
     }
 
     @Override
     public void loop() {
         double ms = runtime.milliseconds();
 
-        if (Utils.inTolerantRange(ms, 3000, Consts.AUTO_MS_TOLERANCE)) {
+        if (Utils.inTolerantRange(ms, 1500 + (barcodePos * Consts.LEVEL_RIGHT_OFFSET), Consts.AUTO_MS_TOLERANCE)) {
+            // diagonal
+            motors.lfd.setPower(Consts.AUTO_DEF_SPED);
+            motors.rbd.setPower(Consts.AUTO_DEF_SPED);
+            motors.lbd.setPower(-Consts.AUTO_DEF_SPED - Consts.SMOL_SPED);
+            motors.rfd.setPower(-Consts.AUTO_DEF_SPED + Consts.SMOL_SPED);
+        }
+        else if (Utils.inTolerantRange(ms, 3800 + (barcodePos == 2 ? 100 : 0), Consts.AUTO_MS_TOLERANCE)) {
             motors.stopAll();
-            motors.hold(motors.arm, Consts.ARM_LEVELS[barcodePos]);
+            motors.lfd.setPower(-Consts.AUTO_DEF_SPED);
+            motors.rbd.setPower(-Consts.AUTO_DEF_SPED);
             motors.lbd.setPower(Consts.AUTO_DEF_SPED);
             motors.rfd.setPower(Consts.AUTO_DEF_SPED);
+//            motors.lbd.setPower(Consts.AUTO_DEF_SPED);
+//            motors.rfd.setPower(Consts.AUTO_DEF_SPED);
         }
-        else if (Utils.inTolerantRange(ms, 4500, Consts.AUTO_MS_TOLERANCE)) {
-            motors.stopAll();
-            motors.claw.setPosition(Consts.CLAW_MIN); // drop
-        }
-        else if (Utils.inTolerantRange(ms, 5000, Consts.AUTO_MS_TOLERANCE)) {
-            motors.lbd.setPower(-Consts.AUTO_DEF_SPED);
-            motors.rfd.setPower(-Consts.AUTO_DEF_SPED);
-        }
-        else if (Utils.inTolerantRange(ms, 6000, Consts.AUTO_MS_TOLERANCE)) {
+        else if (Utils.inTolerantRange(ms, 5200, Consts.AUTO_MS_TOLERANCE)) {
             motors.stopAll();
             motors.spin(-Consts.AUTO_DEF_SPED);
         }
-        else if (Utils.inTolerantRange(ms, 6400, Consts.AUTO_MS_TOLERANCE)) {
+        else if (ms > 5600) {
             motors.stopAll();
-        }
+            telemetry.addData("vu", "drive to target");
+            telemetry.addData("vu targets", vuHelper.targets);
 
-        for (VuforiaTrackable trackable : vuHelper.targets) {
-            if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-                telemetry.addData("Visible Target", trackable.getName());
+            for (VuforiaTrackable trackable : vuHelper.targets) {
+                if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
+                    telemetry.addData("Visible Target", trackable.getName());
 
-                curTarget = ((VuforiaTrackableDefaultListener)trackable.getListener()).getVuforiaCameraFromTarget(); // gets the raw of the trackable
+                    curTarget = ((VuforiaTrackableDefaultListener)trackable.getListener()).getVuforiaCameraFromTarget(); // gets the raw of the trackable
 
-                if (curTarget != null) {
-                    VectorF trans = curTarget.getTranslation();
-                    telemetry.addData("Translation", trans);
+                    if (curTarget != null) {
+                        VectorF trans = curTarget.getTranslation();
+                        telemetry.addData("Translation", trans);
 
-                    // extract the X & Y components of the offset of the target relative to the robot
-                    targetX = trans.get(0) / Consts.MM_PER_INCH; // target X axis
-                    targetY = trans.get(2) / Consts.MM_PER_INCH; // target Y axis
+                        // extract the X & Y components of the offset of the target relative to the robot
+                        targetX = trans.get(0) / Consts.MM_PER_INCH; // target X axis
+                        targetY = trans.get(2) / Consts.MM_PER_INCH; // target Y axis
 
-                    targetRange = Math.hypot(targetX, targetY);
-                    // target bearing is based on angle formed between the X axis and the target range line
-                    targetBearing = -Math.toDegrees(Math.asin(targetX / targetRange));
+                        targetRange = Math.hypot(targetX, targetY);
+                        // target bearing is based on angle formed between the X axis and the target range line
+                        targetBearing = -Math.toDegrees(Math.asin(targetX / targetRange));
 
-                    double rangeError = (targetRange - Consts.DIST_FRM_TARGET);
-                    double headingError = targetBearing;
+                        double rangeError = (targetRange - Consts.DIST_FRM_TARGET);
+                        double headingError = targetBearing;
 
-                    // use the speed and turn gains to calculate robot movement
-                    drive = rangeError * Consts.AUTO_DEF_SPED;
-                    turn = headingError * Consts.AUTO_DEF_SPED;
+                        // use the speed and turn gains to calculate robot movement
+                        drive = rangeError * Consts.AUTO_DEF_SPED;
+                        turn = headingError * Consts.AUTO_DEF_SPED;
 
-                    motors.drive(drive, 0 , turn);
+                        motors.drive(drive, 0 , turn);
 
-                    break;
+                        break;
+                    }
                 }
             }
         }
 
-        
     }
 
 }
