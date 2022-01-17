@@ -108,6 +108,7 @@ public class ShellyOp extends OpMode {
         }
 
         // if limit is pressed then left stick y must be less than 0 to go up
+        //                                  false -> then check (true, true)=yay
         if (gamepad2.left_stick_y != 0 && (!limit.isPressed() || (limit.isPressed() && gamepad2.left_stick_y < 0))) {
             targetArmPosition = 0;
             telemetry.addData("setting power", "(%.2f)", gamepad2.left_stick_y);

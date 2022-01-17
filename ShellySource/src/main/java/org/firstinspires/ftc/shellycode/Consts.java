@@ -26,7 +26,7 @@ public class Consts {
     public static final double VU_DEF_SPED = 0.04f;
     public static final double DIST_FRM_TARGET = 1;
     public static final double AUTO_MS_TOLERANCE = 200;
-    public static final double AUTO_CAM_BARCODE_OFFSETS = 50; // in pixels I assume
+    public static final double AUTO_CAM_BARCODE_OFFSETS = 75; // in pixels I assume
     public static final int LEVEL_RIGHT_OFFSET = 30;
 
     public static final File CAPTURE_DIR = AppUtil.ROBOT_DATA_DIR;
