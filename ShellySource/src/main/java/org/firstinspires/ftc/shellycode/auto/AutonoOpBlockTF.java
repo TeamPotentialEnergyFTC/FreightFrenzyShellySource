@@ -54,7 +54,7 @@ public class AutonoOpBlockTF extends OpMode {
         int tfId = hardwareMap.appContext.getResources().getIdentifier("tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         tfLiteHelper = new TFLiteHelper(Consts.TFL_OD_MODEL, LABELS, 0.65f, 512, 1, tfId, vuHelper.vulo);
 
-        cameraCenter = vuHelper.vulo.getCameraCalibration().getSize().getWidth() / 2;
+        cameraCenter = vuHelper.vulo.getCameraCalibration().getSize().getWidth() / 2.0;
 
         motors = new Motors(hardwareMap);
     }

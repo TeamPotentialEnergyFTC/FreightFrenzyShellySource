@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.shellycode.utils.ButtonState;
@@ -23,6 +24,8 @@ import java.util.concurrent.TimeUnit;
 public class ShellyOp extends OpMode {
     private Motors motors;
     private Camera camera;
+
+    private TouchSensor limit;
 
     private double xdir;
     private double ydir;
@@ -43,6 +46,8 @@ public class ShellyOp extends OpMode {
     public void init() {
         motors = new Motors(hardwareMap);
         camera = new Camera(hardwareMap);
+
+        limit = hardwareMap.get(TouchSensor.class, "limit");
 
         // take a photo every 5 seconds
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss@dd_MM_yyyy");
@@ -91,18 +96,19 @@ public class ShellyOp extends OpMode {
 
 
         if (gamepad2.dpad_down) {
-            targetArmPosition = 159;
+            targetArmPosition = Consts.ARM_LEVELS[0];
         } else if (gamepad2.dpad_left) {
-            targetArmPosition = 311;
+            targetArmPosition = Consts.ARM_LEVELS[1];
         } else if (gamepad2.dpad_right) {
-            targetArmPosition = 520;
+            targetArmPosition = Consts.ARM_LEVELS[2];
         } else if (gamepad2.dpad_up) {
-            targetArmPosition = 703;
+            targetArmPosition = Consts.ARM_LEVELS[3];
         } else if (gamepad2.left_stick_y == 0 && targetArmPosition == 0) {
             targetArmPosition = motors.arm.getCurrentPosition();
         }
 
-        if (gamepad2.left_stick_y != 0) {
+        // if limit is pressed then left stick y must be less than 0 to go up
+        if (gamepad2.left_stick_y != 0 && (!limit.isPressed() || (limit.isPressed() && gamepad2.left_stick_y < 0))) {
             targetArmPosition = 0;
             telemetry.addData("setting power", "(%.2f)", gamepad2.left_stick_y);
             motors.arm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
@@ -120,8 +126,13 @@ public class ShellyOp extends OpMode {
         telemetry.addData("spinny power", "%.2f", motors.spinny.getPower());
         telemetry.addData("Arm Encoder Pos, Arm Target Pos", "%d, %d", motors.arm.getCurrentPosition(), motors.arm.getTargetPosition());
 
-        if (gamepad2.back) {
+        if (gamepad2.back && !limit.isPressed()) {
             telemetry.addData("BACK!", "back");
+
+            // move arm till limit switch here!!!
+            motors.arm.setPower(Consts.AUTO_DEF_SPED);
+        }
+        else if (limit.isPressed()) {
             motors.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
     }
