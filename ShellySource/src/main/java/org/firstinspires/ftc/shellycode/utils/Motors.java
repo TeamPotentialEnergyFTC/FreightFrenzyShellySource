@@ -50,7 +50,7 @@ public class Motors {
         rbd.setPower(0);
         arm.setPower(0);
         quackapult.setPower(0);
-        claw.setPosition(0);
+        claw.setPosition(Consts.CLAW_MIN);
         spinny.setPower(0);
     }
 
@@ -72,6 +72,13 @@ public class Motors {
         rfd.setPower(ydir + turn);
         lfd.setPower(xdir + turn);
         rbd.setPower(xdir - turn);
+    }
+
+    public void pushbotDrive(double drive, double turn) {
+        lbd.setPower(drive - turn);
+        rfd.setPower(drive + turn);
+//        lfd.setPower(-turn);
+//        rbd.setPower(-turn);
     }
 
 }

@@ -40,6 +40,8 @@ public class AutonoOpBlockTF extends OpMode {
     private double cameraCenter = 0;
     private double boxAverage = 0;
 
+    private boolean visibleTarget = false;
+
     private static final String[] LABELS = {
         "tse"
     };
@@ -89,8 +91,8 @@ public class AutonoOpBlockTF extends OpMode {
         motors.hold(motors.arm, Consts.ARM_LEVELS[barcodePos]); // hold
 
         // smol forward
-        motors.lbd.setPower(Consts.SMOL_SPED);
-        motors.rfd.setPower(Consts.SMOL_SPED);
+        motors.lbd.setPower(-Consts.SMOL_SPED);
+        motors.rfd.setPower(-Consts.SMOL_SPED);
 
         // right
         motors.lfd.setPower(Consts.AUTO_DEF_SPED);
@@ -108,8 +110,8 @@ public class AutonoOpBlockTF extends OpMode {
             motors.lbd.setPower(-Consts.AUTO_DEF_SPED - Consts.SMOL_SPED);
             motors.rfd.setPower(-Consts.AUTO_DEF_SPED + Consts.SMOL_SPED);
         }
-        else if (Utils.inTolerantRange(ms, 3800 + (barcodePos == 2 ? 100 : 0), Consts.AUTO_MS_TOLERANCE)) {
-            motors.stopAll();
+        else if (Utils.inTolerantRange(ms, 3700 + (barcodePos == 2 ? 100 : 0), Consts.AUTO_MS_TOLERANCE)) {
+            motors.claw.setPosition(Consts.CLAW_MIN);
             motors.lfd.setPower(-Consts.AUTO_DEF_SPED);
             motors.rbd.setPower(-Consts.AUTO_DEF_SPED);
             motors.lbd.setPower(Consts.AUTO_DEF_SPED);
@@ -122,43 +124,63 @@ public class AutonoOpBlockTF extends OpMode {
             motors.spin(-Consts.AUTO_DEF_SPED);
         }
         else if (ms > 5600) {
-            motors.stopAll();
+//            motors.stopAll();
+            motors.hold(motors.arm, Consts.ARM_LEVELS[3]);
+
+            vuHelper.targets.activate(); // checks if activated in func :D
             telemetry.addData("vu", "drive to target");
-            telemetry.addData("vu targets", vuHelper.targets);
+                for (VuforiaTrackable trackable : vuHelper.targets) {
+                    visibleTarget = false;
+                    if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
+                        visibleTarget = true;
+                        telemetry.addData("Visible Target", trackable.getName());
 
-            for (VuforiaTrackable trackable : vuHelper.targets) {
-                if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-                    telemetry.addData("Visible Target", trackable.getName());
+                        OpenGLMatrix curTarget = ((VuforiaTrackableDefaultListener) trackable.getListener()).getVuforiaCameraFromTarget(); // gets the raw of the trackable
 
-                    curTarget = ((VuforiaTrackableDefaultListener)trackable.getListener()).getVuforiaCameraFromTarget(); // gets the raw of the trackable
+                        if (curTarget != null) {
+                            VectorF trans = curTarget.getTranslation();
+                            telemetry.addData("Translation", trans);
 
-                    if (curTarget != null) {
-                        VectorF trans = curTarget.getTranslation();
-                        telemetry.addData("Translation", trans);
+                            // extract the X & Y components of the offset of the target relative to the robot
+                            float targetX = trans.get(0) / Consts.MM_PER_INCH; // target X axis
+                            float targetY = trans.get(2) / Consts.MM_PER_INCH; // target Y axis
 
-                        // extract the X & Y components of the offset of the target relative to the robot
-                        targetX = trans.get(0) / Consts.MM_PER_INCH; // target X axis
-                        targetY = trans.get(2) / Consts.MM_PER_INCH; // target Y axis
+                            double targetRange = Math.hypot(targetX, targetY);
 
-                        targetRange = Math.hypot(targetX, targetY);
-                        // target bearing is based on angle formed between the X axis and the target range line
-                        targetBearing = -Math.toDegrees(Math.asin(targetX / targetRange));
 
-                        double rangeError = (targetRange - Consts.DIST_FRM_TARGET);
-                        double headingError = targetBearing;
 
-                        // use the speed and turn gains to calculate robot movement
-                        drive = rangeError * Consts.AUTO_DEF_SPED;
-                        turn = headingError * Consts.AUTO_DEF_SPED;
+                            telemetry.addData("range", targetRange);
+                            // target bearing is based on angle formed between the X axis and the target range line
+                            double targetBearing = -Math.toDegrees(Math.asin(targetX / targetRange));
+                            telemetry.addData("bearing", targetBearing);
 
-                        motors.drive(drive, 0 , turn);
+                            double rangeError = (targetRange - Consts.DIST_FRM_TARGET);
+                            double headingError = targetBearing;
 
-                        break;
+                            // use the speed and turn gains to calculate robot movement
+                            double drive = rangeError * Consts.AUTO_DEF_SPED;
+                            double turn = -headingError * Consts.VU_DEF_SPED;
+                            telemetry.addData("drive", drive);
+                            telemetry.addData("turn", turn);
+
+    //                    motors.drive(drive, 0 , turn);
+
+                            if (targetRange < 0.02) {
+                                motors.lfd.setPower(Consts.AUTO_DEF_SPED);
+                                motors.rbd.setPower(Consts.AUTO_DEF_SPED);
+                            }
+                            else {
+                                motors.pushbotDrive(drive, turn);
+                            }
+
+                            break;
+                        }
                     }
+                }
+
+                if (!visibleTarget) {
+                    motors.stopAll();
                 }
             }
         }
-
-    }
-
 }

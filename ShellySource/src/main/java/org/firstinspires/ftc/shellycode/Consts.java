@@ -23,7 +23,8 @@ public class Consts {
     public static final int[] ARM_LEVELS = { 159, 311, 520, 703 };
 
     public static final double AUTO_DEF_SPED = 0.4f;
-    public static final double DIST_FRM_TARGET = 4;
+    public static final double VU_DEF_SPED = 0.04f;
+    public static final double DIST_FRM_TARGET = 1;
     public static final double AUTO_MS_TOLERANCE = 200;
     public static final double AUTO_CAM_BARCODE_OFFSETS = 50; // in pixels I assume
     public static final int LEVEL_RIGHT_OFFSET = 30;
@@ -41,8 +42,8 @@ public class Consts {
     public static final float HALF_TILE = 12 * Consts.MM_PER_INCH;
     public static final float ONE_AND_HALF_TILE = 36 * Consts.MM_PER_INCH;
     // camera displacement for calculations
-    public static final float CAMERA_FORWARD_DISPLACEMENT = 10.0f * Consts.MM_PER_INCH; // forward distance from the center of the robot to the camera lens
-    public static final float CAMERA_VERTICAL_DISPLACEMENT = 5.0f * Consts.MM_PER_INCH; // vertical distance of camera lens off the ground
-    public static final float CAMERA_LEFT_DISPLACEMENT = -3.5f * Consts.MM_PER_INCH; // left distance from the center of the robot to the camera lens ([-] if right)
+    public static final float CAMERA_FORWARD_DISPLACEMENT = 3.0f * Consts.MM_PER_INCH; // forward distance from the center of the robot to the camera lens
+    public static final float CAMERA_VERTICAL_DISPLACEMENT = 6.0f * Consts.MM_PER_INCH; // vertical distance of camera lens off the ground
+    public static final float CAMERA_LEFT_DISPLACEMENT = -5.0f * Consts.MM_PER_INCH; // left distance from the center of the robot to the camera lens ([-] if right)
 
 }

@@ -18,24 +18,28 @@ public class TestVu extends OpMode {
 
     private VuHelper vuHelper;
 
+    private boolean visibleTarget = false;
+
     @Override
     public void init() {
         motors = new Motors(hardwareMap);
 
         vuHelper = new VuHelper(hardwareMap);
+    }
+
+    @Override
+    public void start() {
         vuHelper.loadWallTargets();
     }
 
     @Override
-    public void init_loop() {
-        telemetry.addData("vu targets", vuHelper.targets);
-    }
-
-    @Override
     public void loop() {
+        vuHelper.targets.activate();
 
         for (VuforiaTrackable trackable : vuHelper.targets) {
+            visibleTarget = false;
             if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
+                visibleTarget = true;
                 telemetry.addData("Visible Target", trackable.getName());
 
                 OpenGLMatrix curTarget = ((VuforiaTrackableDefaultListener) trackable.getListener()).getVuforiaCameraFromTarget(); // gets the raw of the trackable
@@ -49,21 +53,30 @@ public class TestVu extends OpMode {
                     float targetY = trans.get(2) / Consts.MM_PER_INCH; // target Y axis
 
                     double targetRange = Math.hypot(targetX, targetY);
+                    telemetry.addData("range", targetRange);
                     // target bearing is based on angle formed between the X axis and the target range line
                     double targetBearing = -Math.toDegrees(Math.asin(targetX / targetRange));
+                    telemetry.addData("bearing", targetBearing);
 
                     double rangeError = (targetRange - Consts.DIST_FRM_TARGET);
                     double headingError = targetBearing;
 
                     // use the speed and turn gains to calculate robot movement
-                    double drive = rangeError * Consts.AUTO_DEF_SPED;
-                    double turn = headingError * Consts.AUTO_DEF_SPED;
+                    double drive = rangeError * 0.1;
+                    double turn = -headingError * Consts.VU_DEF_SPED;
+                    telemetry.addData("drive", drive);
+                    telemetry.addData("turn", turn);
 
-                    motors.drive(drive, 0 , turn);
+//                    motors.drive(drive, 0 , turn);
+                    motors.pushbotDrive(drive, turn);
 
                     break;
                 }
             }
+        }
+
+        if (!visibleTarget) {
+            motors.stopAll();
         }
     }
 }

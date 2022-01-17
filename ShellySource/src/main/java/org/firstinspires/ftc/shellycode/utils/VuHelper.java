@@ -29,7 +29,7 @@ public class VuHelper {
     public VuforiaTrackables targets = null;
 
     public VuHelper(HardwareMap hm) {
-        Parameters params = new Parameters();
+        params = new Parameters();
 
         params.vuforiaLicenseKey = Consts.VUFORIA_LIC;
         params.useExtendedTracking = false; // turns off tracking beyond the target
@@ -51,14 +51,14 @@ public class VuHelper {
         // airplane
         identifyTarget(3,"Blue Alliance Wall", Consts.HALF_TILE, -Consts.HALF_FIELD, Consts.MM_TARGET_HEIGHT, 90, 0, 0);
 
-//        OpenGLMatrix cameraLocationOnRobot = OpenGLMatrix
-//                .translation(Consts.CAMERA_FORWARD_DISPLACEMENT, Consts.CAMERA_LEFT_DISPLACEMENT, Consts.CAMERA_VERTICAL_DISPLACEMENT)
-//                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, 90, 0));
+        OpenGLMatrix cameraLocationOnRobot = OpenGLMatrix
+                .translation(Consts.CAMERA_FORWARD_DISPLACEMENT, Consts.CAMERA_LEFT_DISPLACEMENT, Consts.CAMERA_VERTICAL_DISPLACEMENT)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 127, 90, 0));
 
-        // lets the trackables know where the webcam is
-//        for (VuforiaTrackable trackable : targets) {
-//            ((VuforiaTrackableDefaultListener) trackable.getListener()).setCameraLocationOnRobot(params.cameraName, cameraLocationOnRobot);
-//        }
+        for (VuforiaTrackable trackable : targets) {
+            assert params.cameraName != null;
+            ((VuforiaTrackableDefaultListener) trackable.getListener()).setCameraLocationOnRobot(params.cameraName, cameraLocationOnRobot);
+        }
     }
 
     public void identifyTarget(int aTargetIdx, String targetName, float dx, float dy, float dz, float rx, float ry, float rz) {
