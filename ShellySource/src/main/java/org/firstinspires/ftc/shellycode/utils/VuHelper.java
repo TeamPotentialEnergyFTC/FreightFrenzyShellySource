@@ -6,30 +6,25 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XZY;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.Parameters;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.shellycode.Consts;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class VuHelper {
     public VuforiaLocalizer vulo;
-    public Parameters params;
+    public VuforiaLocalizer.Parameters params;
 
     public VuforiaTrackables targets = null;
 
     public VuHelper(HardwareMap hm) {
-        params = new Parameters();
+        params = new VuforiaLocalizer.Parameters();
 
         params.vuforiaLicenseKey = Consts.VUFORIA_LIC;
         params.useExtendedTracking = false; // turns off tracking beyond the target

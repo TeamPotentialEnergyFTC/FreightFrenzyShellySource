@@ -76,11 +76,11 @@ public class VuDetectNavigationImagesWebcam extends LinearOpMode {
          *
          * Before being transformed, each target image is conceptually located at the origin of the field's
          *  coordinate system (the center of the field), facing up.
-        */
+         */
 
         OpenGLMatrix cameraLocationOnRobot = OpenGLMatrix
-                    .translation(Consts.CAMERA_FORWARD_DISPLACEMENT, Consts.CAMERA_LEFT_DISPLACEMENT, Consts.CAMERA_VERTICAL_DISPLACEMENT)
-                    .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, 90, 0));
+                .translation(Consts.CAMERA_FORWARD_DISPLACEMENT, Consts.CAMERA_LEFT_DISPLACEMENT, Consts.CAMERA_VERTICAL_DISPLACEMENT)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XZY, DEGREES, 90, 90, 0));
 
         // lets the trackables know where the webcam is
         for (VuforiaTrackable trackable : allTrackables) {

@@ -8,8 +8,6 @@ import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CloseableFrame;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.Parameters;
 import org.firstinspires.ftc.shellycode.Consts;
 
 import java.io.File;
@@ -21,7 +19,7 @@ public class Camera {
     private VuforiaLocalizer vuforia;
 
     public Camera(HardwareMap hm) {
-        Parameters parameters = new VuforiaLocalizer.Parameters();
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
         parameters.vuforiaLicenseKey = Consts.VUFORIA_LIC;
         parameters.cameraName = hm.get(WebcamName.class, "cam");
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
@@ -32,7 +30,7 @@ public class Camera {
 
     public Bitmap captureBitmap() {
         try {
-            CloseableFrame frame = vuforia.getFrameQueue().take();
+            VuforiaLocalizer.CloseableFrame frame = vuforia.getFrameQueue().take();
             Bitmap bmp = vuforia.convertFrameToBitmap(frame);
 
             frame.close(); // not sure what this does... assuming closeable frame expects you to close it lol

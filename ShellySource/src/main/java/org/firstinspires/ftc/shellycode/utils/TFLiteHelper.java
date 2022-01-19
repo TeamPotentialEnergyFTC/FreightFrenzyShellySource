@@ -3,13 +3,12 @@ package org.firstinspires.ftc.shellycode.utils;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector.Parameters;
 
 public class TFLiteHelper {
     public TFObjectDetector tfod;
 
     public TFLiteHelper(String modelAsset, String[] labels, float minConfidence, int inpSize, float magnification, int tfodMonitorViewId, VuforiaLocalizer vulo) {
-        Parameters tfodParameters = new Parameters(tfodMonitorViewId);
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
 
         tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.minResultConfidence = minConfidence;

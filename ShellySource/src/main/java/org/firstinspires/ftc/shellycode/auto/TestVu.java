@@ -7,7 +7,6 @@ import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.shellycode.BuildConfig;
 import org.firstinspires.ftc.shellycode.Consts;
 import org.firstinspires.ftc.shellycode.utils.Motors;
 import org.firstinspires.ftc.shellycode.utils.VuHelper;

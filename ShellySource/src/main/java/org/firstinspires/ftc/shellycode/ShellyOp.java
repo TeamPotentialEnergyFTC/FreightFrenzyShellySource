@@ -4,18 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.shellycode.utils.ButtonState;
 import org.firstinspires.ftc.shellycode.utils.Camera;
 import org.firstinspires.ftc.shellycode.utils.Motors;
-import org.threeten.bp.LocalDateTime;
-import org.threeten.bp.format.DateTimeFormatter;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @TeleOp(name="ShellyOp", group="TellyOp")
 public class ShellyOp extends OpMode {

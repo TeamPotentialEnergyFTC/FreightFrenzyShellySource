@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.shellycode.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -17,8 +18,9 @@ import org.firstinspires.ftc.shellycode.utils.VuHelper;
 
 import java.util.List;
 
-@Autonomous(name = "Block Dropoff", group = "Autonomous")
-public class AutonoOpBlockTF extends OpMode {
+@Autonomous(name = "Block Dropoff Red Left", group = "Autonomous")
+@Disabled
+public class AutonoOpRedLeftBlock extends OpMode {
     private TFLiteHelper tfLiteHelper;
 
     private VuHelper vuHelper;
@@ -86,7 +88,7 @@ public class AutonoOpBlockTF extends OpMode {
         runtime.reset();
 
         motors.claw.setPosition(Consts.CLAW_MAX); // grab
-        motors.hold(motors.arm, Consts.ARM_LEVELS[barcodePos]); //
+        motors.hold(motors.arm, Consts.ARM_LEVELS[barcodePos]); // hold
 
         // smol forward
         motors.lbd.setPower(-Consts.SMOL_SPED * 3.0);

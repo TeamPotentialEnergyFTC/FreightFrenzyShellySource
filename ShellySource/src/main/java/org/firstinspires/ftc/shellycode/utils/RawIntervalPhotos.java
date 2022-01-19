@@ -44,4 +44,3 @@ public class RawIntervalPhotos implements Runnable {
 
 
 }
-

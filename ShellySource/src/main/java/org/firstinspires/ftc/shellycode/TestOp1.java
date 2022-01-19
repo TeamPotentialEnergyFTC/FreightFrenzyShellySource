@@ -1,29 +1,13 @@
 package org.firstinspires.ftc.shellycode;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 import com.vuforia.Image;
-import com.vuforia.PIXEL_FORMAT;
-import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.internal.android.dx.util.ByteArray;
-import org.firstinspires.ftc.shellycode.Consts;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.WritableByteChannel;
-import java.util.Locale;
 
 @TeleOp(name = "Test Op 1 ", group = "Test")
 // @Disabled

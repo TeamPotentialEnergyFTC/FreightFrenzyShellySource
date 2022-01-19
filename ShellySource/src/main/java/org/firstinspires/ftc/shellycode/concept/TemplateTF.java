@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.shellycode.concept;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -46,10 +45,10 @@ import java.util.List;
 public class TemplateTF extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
     private static final String[] LABELS = {
-        "Ball",
-        "Cube",
-        "Duck",
-        ""
+            "Ball",
+            "Cube",
+            "Duck",
+            ""
     };
 
     private VuforiaLocalizer vuforia;

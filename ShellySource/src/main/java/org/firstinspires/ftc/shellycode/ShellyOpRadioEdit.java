@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.shellycode;
 
-import android.graphics.Bitmap;
-import android.util.Log;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -41,6 +38,7 @@ public class ShellyOpRadioEdit extends OpMode {
     private ButtonState R1 = new ButtonState();
 
     private int targetArmPosition = 0;
+    private int currentTargetArmPosition = -1;
 
     @Override
     public void init() {
@@ -109,19 +107,24 @@ public class ShellyOpRadioEdit extends OpMode {
 
         // if limit is pressed then left stick y must be less than 0 to go up
         //                                  false -> then check (true, true)=yay
-        if (gamepad2.left_stick_y != 0 && (!limit.isPressed() || (limit.isPressed() && gamepad2.left_stick_y < 0))) {
+        if (gamepad2.left_stick_y != 0 && (!limit.isPressed() || gamepad2.left_stick_y > 0)) {
             targetArmPosition = 0;
+            currentTargetArmPosition = -1;
             telemetry.addData("setting power", "(%.2f)", gamepad2.left_stick_y);
             motors.arm.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
             motors.arm.setPower(gamepad2.left_stick_y * Consts.ARM_GAIN);
         }
         else {
-            motors.hold(motors.arm, targetArmPosition);
+            // Do not set a new position if it's already being held at the target
+            if (targetArmPosition != currentTargetArmPosition) {
+                motors.hold(motors.arm, targetArmPosition);
+                currentTargetArmPosition = targetArmPosition;
+            }
         }
 
         motors.claw.setPosition(R1.buttonState ? Consts.CLAW_MAX : Consts.CLAW_MIN);
 
-        clawCoefficient = x.buttonState ? 1 : -1;
+        clawCoefficient = x.buttonState ? -1 : 1;
         motors.spinny.setPower(b.buttonState ? clawCoefficient * (R1.buttonState ? 0 : 1) : 0); // speed is controlled by the claw
 
         telemetry.addData("spinny power", "%.2f", motors.spinny.getPower());
