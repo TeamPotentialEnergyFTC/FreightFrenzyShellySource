@@ -24,9 +24,9 @@ public class ShellyOp extends OpMode {
 
     private int clawCoefficient = 1;
 
-    private ButtonState b = new ButtonState();
-    private ButtonState x = new ButtonState();
-    private ButtonState R1 = new ButtonState();
+    private final ButtonState b = new ButtonState();
+    private final ButtonState x = new ButtonState();
+    private final ButtonState R1 = new ButtonState();
 
     private int targetArmPosition = 0;
 

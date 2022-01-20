@@ -33,9 +33,9 @@ public class ShellyOpRadioEdit extends OpMode {
 
     private int clawCoefficient = 1;
 
-    private ButtonState b = new ButtonState();
-    private ButtonState x = new ButtonState();
-    private ButtonState R1 = new ButtonState();
+    private final ButtonState b = new ButtonState();
+    private final ButtonState x = new ButtonState();
+    private final ButtonState R1 = new ButtonState();
 
     private int targetArmPosition = 0;
     private int currentTargetArmPosition = -1;
@@ -50,7 +50,7 @@ public class ShellyOpRadioEdit extends OpMode {
         // take a photo every 5 seconds
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss@dd_MM_yyyy");
         Runnable captureRunnable = () -> {
-            camera.saveBitmap(camera.captureBitmap(), dtf.format(LocalDateTime.now()));
+            Camera.saveBitmap(camera.captureBitmap(), dtf.format(LocalDateTime.now()));
         };
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);

@@ -18,14 +18,14 @@ import org.firstinspires.ftc.shellycode.utils.VuHelper;
 
 import java.util.List;
 
-@Autonomous(name = "Block Dropoff Red Left", group = "Autonomous")
+@Autonomous(name = "Block Dropoff BKP", group = "Autonomous")
 @Disabled
-public class AutonoOpRedLeftBlock extends OpMode {
+public class AutonoOpBlockTFBKP extends OpMode {
     private TFLiteHelper tfLiteHelper;
 
     private VuHelper vuHelper;
 
-    private OpenGLMatrix curTarget = null;
+    private final OpenGLMatrix curTarget = null;
     private double targetX;
     private double targetY;
     private double targetRange;
@@ -34,7 +34,7 @@ public class AutonoOpRedLeftBlock extends OpMode {
     private double turn;
 
     private Motors motors;
-    private ElapsedTime runtime = new ElapsedTime();
+    private final ElapsedTime runtime = new ElapsedTime();
 
     private int barcodePos = 1;
     private double cameraCenter = 0;
@@ -88,7 +88,7 @@ public class AutonoOpRedLeftBlock extends OpMode {
         runtime.reset();
 
         motors.claw.setPosition(Consts.CLAW_MAX); // grab
-        motors.hold(motors.arm, Consts.ARM_LEVELS[barcodePos]); // hold
+        motors.hold(motors.arm, Consts.ARM_LEVELS[barcodePos]); //
 
         // smol forward
         motors.lbd.setPower(-Consts.SMOL_SPED * 3.0);

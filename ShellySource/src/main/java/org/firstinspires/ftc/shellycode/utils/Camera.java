@@ -16,7 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class Camera {
-    private VuforiaLocalizer vuforia;
+    private final VuforiaLocalizer vuforia;
 
     public Camera(HardwareMap hm) {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();

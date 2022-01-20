@@ -11,7 +11,7 @@ import org.firstinspires.ftc.shellycode.utils.Utils;
 @Autonomous(name = "Blue Right Auto", group = "Autonomous")
 public class AutonoOpBlueRight extends OpMode {
     private Motors motors;
-    private ElapsedTime runtime = new ElapsedTime();
+    private final ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void init() {

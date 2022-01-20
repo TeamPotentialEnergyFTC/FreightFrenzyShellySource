@@ -8,9 +8,9 @@ import org.firstinspires.ftc.shellycode.utils.Utils;
 public abstract class Auto implements Runnable {
     private ElapsedTime runtime;
 
-    private int startMS;
-    private int endMS;
-    private double tolerance;
+    private final int startMS;
+    private final int endMS;
+    private final double tolerance;
 
     public Auto(int startMS, int endMS, double tolerance) {
         this.startMS = startMS;

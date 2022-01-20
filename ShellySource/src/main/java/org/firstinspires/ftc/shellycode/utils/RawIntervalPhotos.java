@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class RawIntervalPhotos implements Runnable {
-    private RawCamera cam;
-    private Telemetry telem;
+    private final RawCamera cam;
+    private final Telemetry telem;
     private long startTime;
 
     private final int captureDelayMS;
