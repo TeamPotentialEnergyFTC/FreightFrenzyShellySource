@@ -13,8 +13,8 @@ import org.firstinspires.ftc.shellycode.utils.VuHelper;
 
 import java.util.List;
 
-@Autonomous(name = "Block Dropoff Micro Blu(TM)", group = "Autonomous")
-public class AutonoOpBlockTFBluLess extends OpMode {
+@Autonomous(name = "Block Dropoff Blu Delay", group = "Autonomous")
+public class AutonoOpBlockTFBluDelay extends OpMode {
     private TFLiteHelper tfLiteHelper;
 
     private VuHelper vuHelper;
@@ -22,7 +22,7 @@ public class AutonoOpBlockTFBluLess extends OpMode {
     private Motors motors;
     private final ElapsedTime runtime = new ElapsedTime();
 
-    private int barcodePos = 1;
+    private int barcodePos = 0;
     private double cameraCenter = 0;
     private double boxAverage = 0;
 
@@ -75,18 +75,21 @@ public class AutonoOpBlockTFBluLess extends OpMode {
     public void start() {
         runtime.reset();
 
-        motors.hold(motors.arm, Consts.ARM_LEVELS[barcodePos]); // arm
-
-        // forward
-        motors.rfd.setPower(-Consts.AUTO_DEF_SPED);
-        motors.lbd.setPower(-Consts.AUTO_DEF_SPED);
     }
 
     @Override
     public void loop() {
         double ms = runtime.milliseconds();
 //        if (Utils.inTolerantRange(ms, 500, Consts.AUTO_MS_TOLERANCE)) motors.hold(motors.arm, Consts.ARM_LEVELS[barcodePos]); // arm
-        if (Utils.inTolerantRange(ms, 1400, Consts.AUTO_MS_TOLERANCE)) {
+
+        if (Utils.inTolerantRange(ms, 11000, Consts.AUTO_MS_TOLERANCE)) {
+            motors.hold(motors.arm, Consts.ARM_LEVELS[barcodePos]); // arm
+
+            // forward
+            motors.rfd.setPower(-Consts.AUTO_DEF_SPED);
+            motors.lbd.setPower(-Consts.AUTO_DEF_SPED);
+        }
+        if (Utils.inTolerantRange(ms, 12400, Consts.AUTO_MS_TOLERANCE)) {
 
             motors.rfd.setPower(0);
             motors.lbd.setPower(0);
@@ -95,7 +98,7 @@ public class AutonoOpBlockTFBluLess extends OpMode {
             motors.lfd.setPower(-Consts.AUTO_DEF_SPED);
             motors.rbd.setPower(-Consts.AUTO_DEF_SPED);
         }
-        else if (Utils.inTolerantRange(ms, 2600, Consts.AUTO_MS_TOLERANCE)) {
+        else if (Utils.inTolerantRange(ms, 13600, Consts.AUTO_MS_TOLERANCE)) {
             motors.lfd.setPower(0);
             motors.rbd.setPower(0);
 
@@ -103,17 +106,34 @@ public class AutonoOpBlockTFBluLess extends OpMode {
             motors.rfd.setPower(-Consts.AUTO_DEF_SPED);
             motors.lbd.setPower(-Consts.AUTO_DEF_SPED);
         }
-        else if (Utils.inTolerantRange(ms, 3400, Consts.AUTO_MS_TOLERANCE)) {
+        else if (Utils.inTolerantRange(ms, 14400, Consts.AUTO_MS_TOLERANCE)) {
             motors.rfd.setPower(0);
             motors.lbd.setPower(0);
 
             motors.claw.setPosition(Consts.CLAW_MIN); // drop
         }
-        else if (Utils.inTolerantRange(ms, 4500, Consts.AUTO_MS_TOLERANCE)) {
+        else if (Utils.inTolerantRange(ms, 15500, Consts.AUTO_MS_TOLERANCE)) {
             // backwards
             motors.rfd.setPower(Consts.AUTO_DEF_SPED);
             motors.lbd.setPower(Consts.AUTO_DEF_SPED);
         }
-        else if (ms > 5500) motors.stopAll();
+        else if (Utils.inTolerantRange(ms, 16200, Consts.AUTO_MS_TOLERANCE)) {
+            // right
+            motors.lfd.setPower(-Consts.AUTO_DEF_SPED);
+            motors.rbd.setPower(-Consts.AUTO_DEF_SPED);
+        }
+        else if (Utils.inTolerantRange(ms, 18700, Consts.AUTO_MS_TOLERANCE)) {
+            // less back
+            motors.rfd.setPower(Consts.AUTO_DEF_SPED / 3);
+            motors.lbd.setPower(0);
+        }
+        else if (Utils.inTolerantRange(ms, 22000, Consts.AUTO_MS_TOLERANCE)) {
+            motors.stopAll();
+            motors.rfd.setPower(-Consts.AUTO_DEF_SPED);
+            motors.lbd.setPower(-Consts.AUTO_DEF_SPED);
+            motors.hold(motors.arm, Consts.ARM_LEVELS[4]);
+        }
+        else if (ms > 24000) motors.stopAll();
+        else if (ms > 26000) motors.hold(motors.arm, Consts.ARM_LEVELS[4]);
     }
 }

@@ -23,7 +23,7 @@ public class AutonoOpBlockTFBlu extends OpMode {
     private Motors motors;
     private final ElapsedTime runtime = new ElapsedTime();
 
-    private int barcodePos = 1;
+    private int barcodePos = 0;
     private double cameraCenter = 0;
     private double boxAverage = 0;
 
@@ -123,15 +123,15 @@ public class AutonoOpBlockTFBlu extends OpMode {
         else if (Utils.inTolerantRange(ms, 7700, Consts.AUTO_MS_TOLERANCE)) {
             // less back
             motors.rfd.setPower(Consts.AUTO_DEF_SPED / 3);
-            motors.lbd.setPower(Consts.AUTO_DEF_SPED / 3);
+            motors.lbd.setPower(0);
         }
-        else if (Utils.inTolerantRange(ms, 12000, Consts.AUTO_MS_TOLERANCE)) {
+        else if (Utils.inTolerantRange(ms, 11000, Consts.AUTO_MS_TOLERANCE)) {
             motors.stopAll();
             motors.rfd.setPower(-Consts.AUTO_DEF_SPED);
             motors.lbd.setPower(-Consts.AUTO_DEF_SPED);
             motors.hold(motors.arm, Consts.ARM_LEVELS[4]);
         }
-        else if (ms > 14000) motors.stopAll();
-        else if (ms > 17000) motors.hold(motors.arm, Consts.ARM_LEVELS[4]);
+        else if (ms > 13000) motors.stopAll();
+        else if (ms > 15000) motors.hold(motors.arm, Consts.ARM_LEVELS[4]);
     }
 }
