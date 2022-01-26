@@ -128,11 +128,6 @@ public class AutonoOpBlockTF extends OpMode {
         }
         else if (Utils.inTolerantRange(ms, 11000, Consts.AUTO_MS_TOLERANCE)) {
             motors.stopAll();
-            motors.rfd.setPower(-Consts.AUTO_DEF_SPED);
-            motors.lbd.setPower(-Consts.AUTO_DEF_SPED);
-            motors.hold(motors.arm, Consts.ARM_LEVELS[4]);
         }
-        else if (ms > 13000) motors.stopAll();
-        else if (ms > 15000) motors.hold(motors.arm, Consts.ARM_LEVELS[4]);
     }
 }
