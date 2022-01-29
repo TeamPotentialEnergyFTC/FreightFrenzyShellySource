@@ -11,18 +11,18 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Shelly {
-    private static HardwareMap hm;
-    private static Telemetry telem;
+    private HardwareMap hm;
+    private Telemetry telem;
 
-    public static final Consts consts = new Consts();
+    public final Consts consts = new Consts();
 
-    public static DcMotor lfd, rfd, lbd, rbd, quackapult; // l: left, r: right, f: front, b: back | d: drive
-    public static DcMotorEx arm;
-    public static Servo claw;
-    public static CRServo spinny;
+    public DcMotor lfd, rfd, lbd, rbd, quackapult; // l: left, r: right, f: front, b: back | d: drive
+    public DcMotorEx arm;
+    public Servo claw;
+    public CRServo spinny;
 
-    public static TouchSensor limit;
-    public static DistanceSensor dsl, dsb, dsr; // l: left, b: back, r: right | d: distance, s: sensor
+    public TouchSensor limit;
+    public DistanceSensor dsl, bds, rds; // l: left, b: back, r: right | d: distance, s: sensor
 
     public Shelly(HardwareMap hm, Telemetry telem) {
         this.hm = hm;
@@ -32,7 +32,7 @@ public class Shelly {
     }
 
     // the trouble to seperate this is not worth how nice it is to write two lines over this every single time
-    public static void assignHardware() {
+    public void assignHardware() {
         // where l: left, f: front, d: drive, r: right, b: back (less writing on annoying Driver Hub keyboard)
         lfd = hm.get(DcMotor.class, "lfd"); // left front
         rfd = hm.get(DcMotor.class, "rfd"); // right front
@@ -56,18 +56,27 @@ public class Shelly {
         spinny.setDirection(CRServo.Direction.FORWARD);
 
         limit = hm.get(TouchSensor.class, "limit");
+        dsl = hm.get(DistanceSensor.class, "lds");
+        bds = hm.get(DistanceSensor.class, "bds");
+        rds = hm.get(DistanceSensor.class, "rds");
 
         telem.addData(Consts.TELEM_LOG_LEVELS[1], "Hardware Assigned");
     }
 
-    public static void drivePower(double dirX, double dirY, float turn) {
+    public void holdArm(int pos) { // pos in ticks
+        arm.setTargetPosition(pos);
+        arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        arm.setVelocity(Consts.ARM_VEL);
+    }
+
+    public void drivePower(double dirX, double dirY, double turn) {
         lbd.setPower(dirY - turn);
         rfd.setPower(dirY + turn);
         lfd.setPower(dirX + turn);
         rbd.setPower(dirX - turn);
     }
 
-    public static void drivePosition(double coordX, double coordY) {
+    public void drivePosition(double coordX, double coordY) {
         // math shenanigans go here ＼（〇_ｏ）／(⊙_⊙)？
 
 
