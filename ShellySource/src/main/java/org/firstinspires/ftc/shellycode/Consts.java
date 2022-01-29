@@ -36,8 +36,9 @@ public class Consts {
     public static final float HALF_TILE = 12 * Consts.MM_PER_INCH;
     public static final float ONE_AND_HALF_TILE = 36 * Consts.MM_PER_INCH;
     // camera displacement for calculations
-    public static final float CAMERA_FORWARD_DISPLACEMENT = 3.0f * Consts.MM_PER_INCH; // forward distance from the center of the robot to the camera lens
-    public static final float CAMERA_VERTICAL_DISPLACEMENT = 6.0f * Consts.MM_PER_INCH; // vertical distance of camera lens off the ground
-    public static final float CAMERA_LEFT_DISPLACEMENT = -5.0f * Consts.MM_PER_INCH; // left distance from the center of the robot to the camera lens ([-] if right)
+    public static final float CAMERA_FORWARD_DISPLACEMENT = 3.0f * MM_PER_INCH; // forward distance from the center of the robot to the camera lens
+    public static final float CAMERA_VERTICAL_DISPLACEMENT = 6.0f * MM_PER_INCH; // vertical distance of camera lens off the ground
+    public static final float CAMERA_LEFT_DISPLACEMENT = -5.0f * MM_PER_INCH; // left distance from the center of the robot to the camera lens ([-] if right)
 
+    public static final String[] TELEM_LOG_LEVELS = { "DEBUG", "INFO", "STATUS", "WARNING", "ERROR" };
 }
