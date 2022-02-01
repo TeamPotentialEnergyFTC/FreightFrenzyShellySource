@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.shellycode.auto;
+package org.firstinspires.ftc.shellycode.archive;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -8,7 +8,7 @@ import org.firstinspires.ftc.shellycode.Consts;
 import org.firstinspires.ftc.shellycode.utils.Motors;
 import org.firstinspires.ftc.shellycode.utils.Utils;
 
-@Autonomous(name = "Red Right Auto", group = "Autonomous")
+@Autonomous(name = "Red Right Motion", group = "Autonomous")
 public class AutonoOpRedRight extends OpMode {
     private Motors motors;
     private final ElapsedTime runtime = new ElapsedTime();

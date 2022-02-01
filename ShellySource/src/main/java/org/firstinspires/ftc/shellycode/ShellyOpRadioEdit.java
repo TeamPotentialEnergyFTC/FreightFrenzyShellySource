@@ -4,9 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.shellycode.utils.ButtonState;
 import org.firstinspires.ftc.shellycode.utils.Camera;
 import org.firstinspires.ftc.shellycode.utils.Motors;
@@ -23,6 +25,9 @@ public class ShellyOpRadioEdit extends OpMode {
     private Camera camera;
 
     private TouchSensor limit;
+    private DistanceSensor dl;
+    private DistanceSensor db;
+    private DistanceSensor dr;
 
     private double xdir;
     private double ydir;
@@ -47,7 +52,7 @@ public class ShellyOpRadioEdit extends OpMode {
 
         limit = hardwareMap.get(TouchSensor.class, "limit");
 
-        // take a photo every 5 seconds
+        // take a photo every 15 seconds
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss@dd_MM_yyyy");
         Runnable captureRunnable = () -> {
             Camera.saveBitmap(camera.captureBitmap(), dtf.format(LocalDateTime.now()));
@@ -78,10 +83,6 @@ public class ShellyOpRadioEdit extends OpMode {
         xdir = gamepad1.left_stick_x * snailGain * turboGain;
         ydir = gamepad1.left_stick_y * snailGain * turboGain;
 
-//        motors.lbd.setPower(ydir - turn);
-//        motors.rfd.setPower(ydir + turn);
-//        motors.lfd.setPower(xdir + turn);
-//        motors.rbd.setPower(xdir - turn);
         motors.drive(ydir, xdir, turn);
 
         telemetry.addData("Turbo/Snail Telem", "turbo (%.2f), snail (%.2f)", turboGain, snailGain);
@@ -139,8 +140,11 @@ public class ShellyOpRadioEdit extends OpMode {
         else if (limit.isPressed()) {
             motors.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
-    }
 
+        telemetry.addData("DistL", dl.getDistance(DistanceUnit.CM));
+        telemetry.addData("DistB", db.getDistance(DistanceUnit.CM));
+        telemetry.addData("DistwR", dr.getDistance(DistanceUnit.CM));
+    }
 
     @Override
     public void stop() {

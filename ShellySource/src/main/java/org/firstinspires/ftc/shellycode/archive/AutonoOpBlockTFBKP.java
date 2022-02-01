@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.shellycode.auto;
+package org.firstinspires.ftc.shellycode.archive;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;

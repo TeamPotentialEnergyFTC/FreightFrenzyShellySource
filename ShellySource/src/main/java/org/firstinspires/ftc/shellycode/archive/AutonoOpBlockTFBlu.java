@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.shellycode.auto;
+package org.firstinspires.ftc.shellycode.archive;
 
-import com.google.gson.annotations.Until;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Util;
 
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.shellycode.Consts;
 import org.firstinspires.ftc.shellycode.utils.Motors;
@@ -15,8 +14,8 @@ import org.firstinspires.ftc.shellycode.utils.VuHelper;
 
 import java.util.List;
 
-@Autonomous(name = "Block Dropoff Red Delay", group = "Autonomous")
-public class AutonoOpBlockTFDelay extends OpMode {
+@Autonomous(name = "Block Dropoff Blu", group = "Autonomous")
+public class AutonoOpBlockTFBlu extends OpMode {
     private TFLiteHelper tfLiteHelper;
 
     private VuHelper vuHelper;
@@ -27,6 +26,8 @@ public class AutonoOpBlockTFDelay extends OpMode {
     private int barcodePos = 0;
     private double cameraCenter = 0;
     private double boxAverage = 0;
+
+    private boolean visibleTarget = false;
 
     private static final String[] LABELS = {
             "tse"
@@ -74,21 +75,19 @@ public class AutonoOpBlockTFDelay extends OpMode {
     @Override
     public void start() {
         runtime.reset();
+
+        motors.hold(motors.arm, Consts.ARM_LEVELS[barcodePos]); // arm
+
+        // forward
+        motors.rfd.setPower(-Consts.AUTO_DEF_SPED);
+        motors.lbd.setPower(-Consts.AUTO_DEF_SPED);
     }
 
     @Override
     public void loop() {
         double ms = runtime.milliseconds();
 //        if (Utils.inTolerantRange(ms, 500, Consts.AUTO_MS_TOLERANCE)) motors.hold(motors.arm, Consts.ARM_LEVELS[barcodePos]); // arm
-
-        if (Utils.inTolerantRange(ms, 10000, Consts.AUTO_MS_TOLERANCE)) {
-            motors.hold(motors.arm, Consts.ARM_LEVELS[barcodePos]); // arm
-
-            // forward
-            motors.rfd.setPower(-Consts.AUTO_DEF_SPED);
-            motors.lbd.setPower(-Consts.AUTO_DEF_SPED);
-        }
-        if (Utils.inTolerantRange(ms, 11400, Consts.AUTO_MS_TOLERANCE)) {
+        if (Utils.inTolerantRange(ms, 1400, Consts.AUTO_MS_TOLERANCE)) {
 
             motors.rfd.setPower(0);
             motors.lbd.setPower(0);
@@ -97,7 +96,7 @@ public class AutonoOpBlockTFDelay extends OpMode {
             motors.lfd.setPower(-Consts.AUTO_DEF_SPED);
             motors.rbd.setPower(-Consts.AUTO_DEF_SPED);
         }
-        else if (Utils.inTolerantRange(ms, 12600, Consts.AUTO_MS_TOLERANCE)) {
+        else if (Utils.inTolerantRange(ms, 2600, Consts.AUTO_MS_TOLERANCE)) {
             motors.lfd.setPower(0);
             motors.rbd.setPower(0);
 
@@ -105,28 +104,28 @@ public class AutonoOpBlockTFDelay extends OpMode {
             motors.rfd.setPower(-Consts.AUTO_DEF_SPED);
             motors.lbd.setPower(-Consts.AUTO_DEF_SPED);
         }
-        else if (Utils.inTolerantRange(ms, 13400, Consts.AUTO_MS_TOLERANCE)) {
+        else if (Utils.inTolerantRange(ms, 3400, Consts.AUTO_MS_TOLERANCE)) {
             motors.rfd.setPower(0);
             motors.lbd.setPower(0);
 
             motors.claw.setPosition(Consts.CLAW_MIN); // drop
         }
-        else if (Utils.inTolerantRange(ms, 14500, Consts.AUTO_MS_TOLERANCE)) {
+        else if (Utils.inTolerantRange(ms, 4500, Consts.AUTO_MS_TOLERANCE)) {
             // backwards
             motors.rfd.setPower(Consts.AUTO_DEF_SPED);
             motors.lbd.setPower(Consts.AUTO_DEF_SPED);
         }
-        else if (Utils.inTolerantRange(ms, 15200, Consts.AUTO_MS_TOLERANCE)) {
+        else if (Utils.inTolerantRange(ms, 5200, Consts.AUTO_MS_TOLERANCE)) {
             // right
-            motors.lfd.setPower(Consts.AUTO_DEF_SPED);
-            motors.rbd.setPower(Consts.AUTO_DEF_SPED);
+            motors.lfd.setPower(-Consts.AUTO_DEF_SPED);
+            motors.rbd.setPower(-Consts.AUTO_DEF_SPED);
         }
-        else if (Utils.inTolerantRange(ms, 18000, Consts.AUTO_MS_TOLERANCE)) {
+        else if (Utils.inTolerantRange(ms, 7700, Consts.AUTO_MS_TOLERANCE)) {
             // less back
             motors.rfd.setPower(Consts.AUTO_DEF_SPED / 3);
-            motors.lbd.setPower(Consts.AUTO_DEF_SPED / 3);
+            motors.lbd.setPower(0);
         }
-        else if (Utils.inTolerantRange(ms, 21000, Consts.AUTO_MS_TOLERANCE)) {
+        else if (Utils.inTolerantRange(ms, 11000, Consts.AUTO_MS_TOLERANCE)) {
             motors.stopAll();
         }
     }

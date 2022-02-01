@@ -24,8 +24,6 @@ public class ShellyOpDrive extends OpMode {
     public void init() {
         shelly = new Shelly(hardwareMap, telemetry);
         shelly.assignHardware();
-
-        telemetry.addData("eh", b.buttonState);
     }
 
     @Override
@@ -49,14 +47,14 @@ public class ShellyOpDrive extends OpMode {
         double ydir = gamepad1.left_stick_y * snailGain * turboGain;
         double turn = gamepad1.right_stick_x * snailGain * turboGain * 0.5;
 
-        shelly.drivePower(ydir, xdir, turn);
+        shelly.driveTicks((int)(ydir * Consts.TICKS_PER_POWER), (int)(xdir * Consts.TICKS_PER_POWER), (int)(turn * Consts.TICKS_PER_POWER));
 
         telemetry.addData("Turbo/Snail Telem", "turbo (%.2f), snail (%.2f)", turboGain, snailGain);
         telemetry.addData("Drive Telem", "xdir (%.2f), ydir (%.2f), turn (%.2f), gains (%.2f)", xdir, ydir, turn, snailGain * turboGain);
 
         // ---
         // quackapult + arm + claw
-        // --- Utils.inTolerantRange(motors.arm.getCurrentPosition(), motors.arm.getTargetPosition(), motors.arm.getTargetPositionTolerance())
+        // ---
         shelly.quackapult.setPower(gamepad2.right_stick_x);
 
         if (gamepad2.dpad_down) {
@@ -105,6 +103,6 @@ public class ShellyOpDrive extends OpMode {
             shelly.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
 
-        telemetry.addData(Consts.TELEM_LOG_LEVELS[0], "LDS: %s BDS: %s RDS: %s", shelly.dsl.getDistance(DistanceUnit.MM), shelly.bds.getDistance(DistanceUnit.MM), shelly.rds.getDistance(DistanceUnit.MM));
+//        telemetry.addData(Consts.TELEM_LOG_LEVELS[0], "LDS: %s BDS: %s RDS: %s", shelly.dsl.getDistance(DistanceUnit.MM), shelly.bds.getDistance(DistanceUnit.MM), shelly.rds.getDistance(DistanceUnit.MM));
     }
 }

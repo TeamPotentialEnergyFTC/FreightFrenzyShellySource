@@ -10,9 +10,18 @@ public class Consts {
     public static final double MIN_SPED = 0.2 / DEF_SPED;
     public static final double CLAW_MIN = 0.33;
     public static final double CLAW_MAX = 0.56;
+
     public static final int ARM_VEL = 300; // tps
+    public static final int TICKS_PER_POWER = 3000; // tps
+    public static final double DRIVE_POS_DEF_TPS = 1000; // seems reasonable
+    public static final int TICKS_PER_INCH = 100;
+
     public static final double ARM_GAIN = 0.6;
     public static final double SMOL_SPED = 0.03;
+
+    public static final double PI = 3.14159265358972;
+    public static final double R = 5.75;
+    public static final double MAGIK_NUM = 1.295;
 
     public static final int[] ARM_LEVELS = { 139, 291, 500, 683, 900 };
 
@@ -20,7 +29,7 @@ public class Consts {
     public static final double VU_DEF_SPED = 0.04f;
     public static final double DIST_FRM_TARGET = 1;
     public static final double AUTO_MS_TOLERANCE = 200;
-    public static final double AUTO_CAM_BARCODE_OFFSETS = 75; // in pixels I assume
+    public static final double AUTO_CAM_BARCODE_OFFSETS = 80; // in pixels I assume
     public static final int LEVEL_RIGHT_OFFSET = 30;
 
     public static final File CAPTURE_DIR = AppUtil.ROBOT_DATA_DIR;

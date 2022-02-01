@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.shellycode.auto;
+package org.firstinspires.ftc.shellycode.archive;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XZY;
@@ -142,7 +142,7 @@ public class TestVuOld extends LinearOpMode {
                 drive = rangeError * SPEED_GAIN;
                 turn = headingError * TURN_GAIN;
 
-                telemetry.addData("Auto", "Drive %5.2f, Turn %5.2f", drive, turn);
+                telemetry.addData("Motion", "Drive %5.2f, Turn %5.2f", drive, turn);
             }
             telemetry.update();
 

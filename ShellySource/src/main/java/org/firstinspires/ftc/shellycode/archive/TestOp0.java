@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.shellycode;
+package org.firstinspires.ftc.shellycode.archive;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.shellycode.Consts;
 import org.firstinspires.ftc.shellycode.utils.ButtonState;
 import org.firstinspires.ftc.shellycode.utils.Motors;
 
