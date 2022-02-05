@@ -36,7 +36,8 @@ public class Consts {
 
     public static final String VUFORIA_LIC = "AaA6S6z/////AAABmV078v8AB0xvlFA/9/1fGo8zx6NXlIu8aWH27hfz7bV0U1p5+AQ6El5oes2ysLtsVrpoE2GNAhCP1EhiXg0CQ68NhZv5Cp7xqfYmrvS/udZqLk5rb/9OLWexy37awrSeCT24N+bCA5VZtH91f2F3o4cYe+OvEsRYS4pEb1mdMAqnPTQttuvQw64MTQt4MQbuheCiWHfgyw+nBFbrgY1/0gtHj6Fn8naqHz3NjbOfDCntG1WJhwt8FJK3LS1AQnswzBDt2krVwe2tBvZ68EcL76mAc7QXkYM2YB4cvqUwPTzc6ZE2vgRvzkjeZ7YWHpftWrj+LOQFhaXgv5MgQdwuxQajpDBDoQGahFc/SqPTrDqF";
     public static final String TFL_OD_MODEL = "shelly_27.tflite";
-    public static final String TFL_OD_LABELS = "shelly_27_labels.txt";
+//    public static final String TFL_OD_LABELS = "shelly_27_labels.txt";
+    public static final String[] TFL_OD_LABELS = new String[] { "TSE" };
 
     public static final float MM_PER_INCH = 25.4f;
     // for positioning robot on field

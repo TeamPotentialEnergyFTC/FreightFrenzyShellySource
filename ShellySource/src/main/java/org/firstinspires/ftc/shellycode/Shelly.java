@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 public class Shelly {
     private HardwareMap hm;
@@ -79,6 +80,25 @@ public class Shelly {
         params.cameraName = hm.get(WebcamName.class, "cam");
 
         return ClassFactory.getInstance().createVuforia(params); // init
+    }
+
+    public TFObjectDetector getTflite(String modelAssetName, String[] orderedModelLabels, float minConfidence, int inpSize, float magnification, int tfodMonitorViewId, VuforiaLocalizer vulo) {
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+
+        tfodParameters.isModelTensorFlow2 = true;
+        tfodParameters.minResultConfidence = minConfidence;
+        tfodParameters.inputSize = inpSize;
+
+        TFObjectDetector tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vulo); // tfod uses camera frames from vulo
+        tfod.loadModelFromAsset(modelAssetName, orderedModelLabels);
+
+        if (tfod != null) {
+            tfod.activate();
+            // tfod will scale input down so objects farther away will be much harder to detect so focusing in remedies this
+            tfod.setZoom(magnification, 16.0 / 9.0);
+        }
+
+        return tfod;
     }
 
     public void holdArm(int pos) { // pos in ticks
