@@ -11,7 +11,7 @@ public class TestFramework extends OpMode {
 
     private int stage = 0;
 
-    private Motion[] motions;
+    private Motion[] motions = new Motion[2];
 
     @Override
     public void init() {
@@ -21,28 +21,41 @@ public class TestFramework extends OpMode {
         motions[0] = new Motion() {
             @Override
             public boolean isEnd() {
-                return true;
+                return !shelly.lbd.isBusy();
             }
 
             @Override
             public void init() {
-
+                shelly.driveInches(7, 0, 200);
             }
 
             @Override
-            public void run() {
+            public void run() {}
+            @Override
+            public void cleanup() {}
+        };
 
+        motions[1] = new Motion() {
+            @Override
+            public boolean isEnd() {
+                return shelly.lbd.isBusy();
             }
 
             @Override
-            public void cleanup() {
-
+            public void init() {
+                shelly.turnDeg(90, 150);
             }
-        }
+
+            @Override
+            public void run() {}
+            @Override
+            public void cleanup() {}
+        };
     }
 
     @Override
     public void start() {
+        motions[0].init();
     }
 
     @Override
@@ -51,7 +64,7 @@ public class TestFramework extends OpMode {
 
         if (motions[stage].isEnd()) {
             motions[stage].cleanup();
-            if (stage < motions.length) motions[++stage].init();
+            if (stage < motions.length - 1) motions[++stage].init();
             else stop();
         }
     }

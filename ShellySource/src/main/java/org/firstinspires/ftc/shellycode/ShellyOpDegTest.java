@@ -22,11 +22,11 @@ public class ShellyOpDegTest extends OpMode {
 
     @Override
     public void start() {
-        shelly.turnDeg(90);
+        shelly.turnDeg(90, 150);
     }
 
     @Override
     public void loop() {
-        if (!shelly.lbd.isBusy()) shelly.turnDeg(-90);
+        if (!shelly.lbd.isBusy()) shelly.turnDeg(-90, 150);
     }
 }

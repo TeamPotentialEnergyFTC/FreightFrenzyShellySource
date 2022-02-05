@@ -115,7 +115,7 @@ public class Shelly {
         rbd.setVelocity(tpsY - turnTps);
     }
 
-    private void trySwitchRunPosition() {
+    private void trySwitchRunPosition(int vel) {
         // copy-🍝 pain
         if (lbd.getMode() != DcMotor.RunMode.RUN_TO_POSITION) { // one should mean all
             lbd.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -124,24 +124,43 @@ public class Shelly {
             rbd.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
-        lbd.setVelocity(Consts.DRIVE_POS_DEF_TPS);
-        rfd.setVelocity(Consts.DRIVE_POS_DEF_TPS);
-        lfd.setVelocity(Consts.DRIVE_POS_DEF_TPS);
-        rbd.setVelocity(Consts.DRIVE_POS_DEF_TPS);
+        lbd.setVelocity(vel);
+        rfd.setVelocity(vel);
+        lfd.setVelocity(vel);
+        rbd.setVelocity(vel);
     }
 
-    public void driveInches(double xInches, double yInches) {
-        int xTicks = (int)(xInches * 100);
-        int yTicks = (int)(yInches * 100);
+    private void resetEncoder() {
+        if (lbd.getMode() != DcMotor.RunMode.STOP_AND_RESET_ENCODER) {
+            lbd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rfd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lfd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rbd.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+    }
+
+
+    public void setDriveVel(int vel) {
+        trySwitchRunPosition(vel);
+        lbd.setVelocity(vel);
+        rfd.setVelocity(vel);
+        lfd.setVelocity(vel);
+        rbd.setVelocity(vel);
+    }
+
+    public void driveInches(double xInches, double yInches, int vel) {
+        int xTicks = (int)(xInches * Consts.TICKS_PER_INCH);
+        int yTicks = (int)(yInches * Consts.TICKS_PER_INCH);
         // it's about 1in per 100 ticks which is nice
-        lbd.setTargetPosition(xTicks);
-        rfd.setTargetPosition(xTicks);
-        lfd.setTargetPosition(yTicks);
-        rbd.setTargetPosition(yTicks);
-        trySwitchRunPosition();
+        lbd.setTargetPosition(-yTicks);
+        rfd.setTargetPosition(-yTicks);
+        lfd.setTargetPosition(xTicks);
+        rbd.setTargetPosition(xTicks);
+        trySwitchRunPosition(vel);
+        resetEncoder();
     }
 
-    public void turnDeg(double deg) {
+    public void turnDeg(double deg, int vel) {
         double rawTurnInches = deg / 360 * 2 * Consts.PI * Consts.R;
         int realTurnTicks = (int)(rawTurnInches / Consts.MAGIK_NUM * Consts.TICKS_PER_INCH);
 
@@ -149,7 +168,8 @@ public class Shelly {
         rfd.setTargetPosition(realTurnTicks);
         lfd.setTargetPosition(realTurnTicks);
         rbd.setTargetPosition(-realTurnTicks);
-        trySwitchRunPosition();
+        trySwitchRunPosition(vel);
+        resetEncoder();
     }
 
     public void findPosition(double coordX, double coordY) {
