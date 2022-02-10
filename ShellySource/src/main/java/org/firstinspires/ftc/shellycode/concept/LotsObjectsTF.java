@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.shellycode.concept;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -10,7 +11,7 @@ import org.firstinspires.ftc.shellycode.utils.VuHelper;
 import java.util.List;
 
 @Autonomous(name = "Lots of objects detector", group = "Autonomous")
-// @Disabled
+@Disabled
 public class LotsObjectsTF extends OpMode {
     private TFLiteHelper tfLiteHelper;
     private VuHelper vuHelper;

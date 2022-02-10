@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGR
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XZY;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @TeleOp(name = "Test Old Vu", group = "Webcam")
-// @Disabled
+@Disabled
 public class TestVuOld extends LinearOpMode {
     // basically controls the speed during auto
     private final double DESIRED_DISTANCE = 4.0; // how close the robot should get to the target

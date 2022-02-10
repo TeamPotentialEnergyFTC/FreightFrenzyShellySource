@@ -27,7 +27,7 @@ public class Shelly {
     public CRServo spinny;
 
     public TouchSensor limit;
-    public DistanceSensor dsl, bds, rds; // l: left, b: back, r: right | d: distance, s: sensor
+    public DistanceSensor backds; // l: left, b: back, r: right | d: distance, s: sensor
 
     public Shelly(HardwareMap hm, Telemetry telem) {
         this.hm = hm;
@@ -65,9 +65,7 @@ public class Shelly {
         spinny.setDirection(CRServo.Direction.FORWARD);
 
         limit = hm.get(TouchSensor.class, "limit");
-        dsl = hm.get(DistanceSensor.class, "lds");
-        bds = hm.get(DistanceSensor.class, "bds");
-        rds = hm.get(DistanceSensor.class, "rds");
+        backds = hm.get(DistanceSensor.class, "backds");
 
         telem.addData(Consts.TELEM_LOG_LEVELS[1], "Hardware Assigned");
     }
@@ -129,10 +127,10 @@ public class Shelly {
             rbd.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
-        lbd.setVelocity(tpsX - turnTps);
-        rfd.setVelocity(tpsX + turnTps);
-        lfd.setVelocity(tpsY + turnTps);
-        rbd.setVelocity(tpsY - turnTps);
+        lbd.setVelocity(-tpsY - turnTps);
+        rfd.setVelocity(-tpsY + turnTps);
+        lfd.setVelocity(tpsX + turnTps);
+        rbd.setVelocity(tpsX - turnTps);
     }
 
     private void trySwitchRunPosition(int vel) {
@@ -159,7 +157,6 @@ public class Shelly {
         }
     }
 
-
     public void setDriveVel(int vel) {
         trySwitchRunPosition(vel);
         lbd.setVelocity(vel);
@@ -182,7 +179,8 @@ public class Shelly {
 
     public void turnDeg(double deg, int vel) {
         double rawTurnInches = deg / 360 * 2 * Consts.PI * Consts.R;
-        int realTurnTicks = (int)(rawTurnInches / Consts.MAGIK_NUM * Consts.TICKS_PER_INCH);
+//        int realTurnTicks = (int)(rawTurnInches / Consts.MAGIK_NUM * Consts.TICKS_PER_INCH);
+        int realTurnTicks = (int)(rawTurnInches * Consts.TICKS_PER_INCH);
 
         lbd.setTargetPosition(-realTurnTicks);
         rfd.setTargetPosition(realTurnTicks);

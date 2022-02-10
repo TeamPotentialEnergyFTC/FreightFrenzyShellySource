@@ -2,6 +2,7 @@ package org.firstinspires.ftc.shellycode.archive;
 
 import com.google.gson.annotations.Until;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Util;
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.shellycode.utils.VuHelper;
 import java.util.List;
 
 @Autonomous(name = "Block Dropoff Red Delay", group = "Autonomous")
+//@Disabled
 public class AutonoOpBlockTFDelay extends OpMode {
     private TFLiteHelper tfLiteHelper;
 

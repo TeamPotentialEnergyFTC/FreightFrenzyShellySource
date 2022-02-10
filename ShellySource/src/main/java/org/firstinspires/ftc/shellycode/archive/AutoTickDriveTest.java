@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.shellycode.archive;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.shellycode.Shelly;
 import org.firstinspires.ftc.shellycode.utils.ButtonState;
 
 @Autonomous(name = "Motion Tick Drive Test")
+@Disabled
 public class AutoTickDriveTest extends OpMode {
     private Shelly shelly;
 

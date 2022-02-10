@@ -25,9 +25,9 @@ public class ShellyOpRadioEdit extends OpMode {
     private Camera camera;
 
     private TouchSensor limit;
-    private DistanceSensor dl;
-    private DistanceSensor db;
-    private DistanceSensor dr;
+//    private DistanceSensor dl;
+//    private DistanceSensor db;
+//    private DistanceSensor dr;
 
     private double xdir;
     private double ydir;
@@ -141,9 +141,6 @@ public class ShellyOpRadioEdit extends OpMode {
             motors.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
 
-        telemetry.addData("DistL", dl.getDistance(DistanceUnit.CM));
-        telemetry.addData("DistB", db.getDistance(DistanceUnit.CM));
-        telemetry.addData("DistwR", dr.getDistance(DistanceUnit.CM));
     }
 
     @Override
