@@ -23,7 +23,7 @@ public class Consts {
     public static final double R = 4.375;
     public static final double MAGIK_NUM = 1.295;
 
-    public static final int[] ARM_LEVELS = { 139, 291, 500, 683, 900 };
+    public static final int[] ARM_LEVELS = { 150, 310, 500, 690, 900 };
 
     public static final double AUTO_DEF_SPED = 0.4f;
     public static final double VU_DEF_SPED = 0.04f;

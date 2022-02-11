@@ -77,6 +77,25 @@ public class FrameworkBlueL0Shared extends OpMode {
             }
         });
 
+
+        motions.add(new Motion() { // go back
+            @Override
+            public boolean isEnd() {
+                return !shelly.left.isBusy();
+            }
+
+            @Override
+            public void init()
+            {
+                shelly.driveInches(0, -3, 800);
+            }
+
+            @Override
+            public void run() {}
+            @Override
+            public void cleanup() { }
+        });
+
         motions.add(new Motion() { // drive diagonal towards, drop, and go back
             @Override
             public boolean isEnd() {
@@ -86,7 +105,7 @@ public class FrameworkBlueL0Shared extends OpMode {
             @Override
             public void init()
             {
-                shelly.driveInches(-16, -24 + barcodePos, 1700);
+                shelly.driveInches(-16, -24 + barcodePos, 1500);
             }
 
             @Override

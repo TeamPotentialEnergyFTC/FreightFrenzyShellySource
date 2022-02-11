@@ -78,6 +78,25 @@ public class FrameworkRedR0Shared extends OpMode {
             public void cleanup() { shelly.holdArm((Consts.ARM_LEVELS[2])); }
         });
 
+
+        motions.add(new Motion() { // go back
+            @Override
+            public boolean isEnd() {
+                return !shelly.left.isBusy();
+            }
+
+            @Override
+            public void init()
+            {
+                shelly.driveInches(0, -3, 800);
+            }
+
+            @Override
+            public void run() {}
+            @Override
+            public void cleanup() { }
+        });
+
         motions.add(new Motion() { // go back
             @Override
             public boolean isEnd() {
@@ -87,7 +106,7 @@ public class FrameworkRedR0Shared extends OpMode {
             @Override
             public void init()
             {
-                shelly.driveInches(48, -23 - barcodePos, 1700);
+                shelly.driveInches(48, -23 - barcodePos, 1500);
             }
 
             @Override
@@ -96,6 +115,24 @@ public class FrameworkRedR0Shared extends OpMode {
             public void cleanup() { }
         });
 
+
+        motions.add(new Motion() { // go back
+            @Override
+            public boolean isEnd() {
+                return !shelly.left.isBusy();
+            }
+
+            @Override
+            public void init()
+            {
+                shelly.driveInches(0, -4, 1500);
+            }
+
+            @Override
+            public void run() {}
+            @Override
+            public void cleanup() { }
+        });
 
         motions.add(new Motion() { // drive forward
             @Override
@@ -142,7 +179,7 @@ public class FrameworkRedR0Shared extends OpMode {
             @Override
             public void init()
             {
-                shelly.driveInches(-30, 0, 1000);
+                shelly.driveInches(-26, 0, 1000);
             }
 
             @Override

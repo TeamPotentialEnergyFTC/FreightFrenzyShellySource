@@ -153,7 +153,7 @@ public class FrameworkRedL0 extends OpMode {
 
             @Override
             public void init() {
-                shelly.driveInches(0, -10, 1700);
+                shelly.driveInches(0, -10, 1500);
             }
 
             @Override
@@ -194,6 +194,25 @@ public class FrameworkRedL0 extends OpMode {
             public void run() {}
             @Override
             public void cleanup() { shelly.claw.setPosition(Consts.CLAW_MIN); }
+        });
+
+
+        motions.add(new Motion() { // go back
+            @Override
+            public boolean isEnd() {
+                return !shelly.left.isBusy();
+            }
+
+            @Override
+            public void init()
+            {
+                shelly.driveInches(0, -3, 1500);
+            }
+
+            @Override
+            public void run() {}
+            @Override
+            public void cleanup() { }
         });
 
         motions.add(new Motion() { // backwards to line up with storage

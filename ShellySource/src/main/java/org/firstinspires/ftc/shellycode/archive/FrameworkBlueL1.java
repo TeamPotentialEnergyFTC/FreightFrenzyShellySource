@@ -138,7 +138,7 @@ public class FrameworkBlueL1 extends OpMode {
 
             @Override
             public void init() {
-                shelly.driveInches(0, -17, 1700);
+                shelly.driveInches(0, -17, 1500);
             }
 
             @Override
