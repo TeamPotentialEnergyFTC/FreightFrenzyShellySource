@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.shellycode.archive;
+package org.firstinspires.ftc.shellycode.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -9,14 +8,12 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.shellycode.Consts;
 import org.firstinspires.ftc.shellycode.Shelly;
-import org.firstinspires.ftc.shellycode.auto.Motion;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name = "Framework Blue L1OLD")
-@Disabled
-public class FrameworkBlueL1 extends OpMode {
+@Autonomous(name = "Framework Blue L10 Shared")
+public class FrameworkBlueL10Shared extends OpMode {
     private Shelly shelly;
     private TFObjectDetector tfod;
 
@@ -24,7 +21,7 @@ public class FrameworkBlueL1 extends OpMode {
     private int stage = 0;
 
     private double cameraCenter = 0;
-    private int barcodePos = 2;
+    private int barcodePos = 0;
 
     @Override
     public void init() {
@@ -41,16 +38,39 @@ public class FrameworkBlueL1 extends OpMode {
 
         shelly.claw.setPosition(Consts.CLAW_MAX);
 
-        motions.add(new Motion() { // drive forward off wall
+        motions.add(new Motion() {
             @Override
             public boolean isEnd() {
-                return !shelly.right.isBusy();
+                return runtime.seconds() > 10;
+            }
+
+            @Override
+            public void init() {
+                runtime.reset();
+                telemetry.log().add("Waiting", "🥱💤💤💤");
+            }
+
+            @Override
+            public void run() {
+
+            }
+
+            @Override
+            public void cleanup() {
+
+            }
+        });
+
+        motions.add(new Motion() { // drive right
+            @Override
+            public boolean isEnd() {
+                return !shelly.front.isBusy();
             }
 
             @Override
             public void init()
             {
-                shelly.driveInches(1, 5, 600);
+                shelly.driveInches(13, 0, 1000);
                 shelly.holdArm(Consts.ARM_LEVELS[barcodePos]);
             }
 
@@ -60,7 +80,45 @@ public class FrameworkBlueL1 extends OpMode {
             public void cleanup() {}
         });
 
-        motions.add(new Motion() { // back into quackapult
+        motions.add(new Motion() { // drive diagonal towards, drop, and go back
+            @Override
+            public boolean isEnd() {
+                return !shelly.left.isBusy();
+            }
+
+            @Override
+            public void init()
+            {
+                shelly.driveInches(16, 18 + barcodePos, 1000);
+            }
+
+            @Override
+            public void run() {}
+            @Override
+            public void cleanup() {
+                shelly.claw.setPosition(Consts.CLAW_MIN);
+            }
+        });
+
+        motions.add(new Motion() { // drive diagonal towards, drop, and go back
+            @Override
+            public boolean isEnd() {
+                return !shelly.left.isBusy();
+            }
+
+            @Override
+            public void init()
+            {
+                shelly.driveInches(-16, -24 + barcodePos, 1700);
+            }
+
+            @Override
+            public void run() {}
+            @Override
+            public void cleanup() { shelly.holdArm(Consts.ARM_LEVELS[2]); }
+        });
+
+        motions.add(new Motion() { // drive left
             @Override
             public boolean isEnd() {
                 return !shelly.front.isBusy();
@@ -69,59 +127,7 @@ public class FrameworkBlueL1 extends OpMode {
             @Override
             public void init()
             {
-                shelly.driveInches(25, 0, 1000);
-            }
-
-            @Override
-            public void run() {}
-            @Override
-            public void cleanup() {}
-        });
-
-        motions.add(new Motion() { // spin quackapult
-            @Override
-            public boolean isEnd() {
-                return runtime.seconds() > 4;
-            }
-
-            @Override
-            public void init() {
-                runtime.reset();
-                shelly.quackapult.setPower(1.5*Consts.AUTO_DEF_SPED);
-            }
-
-            @Override
-            public void run() { }
-
-            @Override
-            public void cleanup() { shelly.quackapult.setPower(0); }
-        });
-
-        motions.add(new Motion() { // drive left away from quackapult
-            @Override
-            public boolean isEnd() { return !shelly.left.isBusy(); }
-
-            @Override
-            public void init() {
-                shelly.driveInches(0, 32, 1000);
-            }
-
-            @Override
-            public void run() { }
-
-            @Override
-            public void cleanup() { }
-        });
-
-        motions.add(new Motion() { // back into audience wall
-            @Override
-            public boolean isEnd() {
-                return !shelly.left.isBusy();
-            }
-
-            @Override
-            public void init() {
-                shelly.turnDeg(-90, 1000);
+                shelly.driveInches(-30, 0, 1000);
             }
 
             @Override
@@ -130,15 +136,16 @@ public class FrameworkBlueL1 extends OpMode {
             public void cleanup() { }
         });
 
-        motions.add(new Motion() { // back into audience wall
+        motions.add(new Motion() { // drive forward
             @Override
             public boolean isEnd() {
                 return !shelly.left.isBusy();
             }
 
             @Override
-            public void init() {
-                shelly.driveInches(0, -17, 1700);
+            public void init()
+            {
+                shelly.driveInches(0, 27, 1000);
             }
 
             @Override
@@ -147,55 +154,40 @@ public class FrameworkBlueL1 extends OpMode {
             public void cleanup() { }
         });
 
-        motions.add(new Motion() { // left to line up with hub
-            @Override
-            public boolean isEnd() {
-                return !shelly.left.isBusy();
-            }
-
-            @Override
-            public void init() {
-                shelly.driveInches(0, 32 + barcodePos, 1000);
-            }
-
-            @Override
-            public void run() {}
-            @Override
-            public void cleanup() { shelly.claw.setPosition(Consts.CLAW_MIN); }
-        });
-
-        motions.add(new Motion() { // backwards to line up with storage
-            @Override
-            public boolean isEnd() {
-                return !shelly.left.isBusy();
-            }
-
-            @Override
-            public void init() {
-                shelly.driveInches(0, -38, 1000);
-            }
-
-            @Override
-            public void run() {}
-            @Override
-            public void cleanup() { }
-        });
-
-        motions.add(new Motion() { // left to line up with hub
+        motions.add(new Motion() { // spinnnnnnnnnnnnnnn!
             @Override
             public boolean isEnd() {
                 return !shelly.front.isBusy();
             }
 
             @Override
-            public void init() {
-                shelly.driveInches(-15, 0, 1000);
+            public void init()
+            {
+                shelly.turnDeg(180, 1000);
             }
 
             @Override
             public void run() {}
             @Override
-            public void cleanup() { shelly.arm.setTargetPosition(10); }
+            public void cleanup() { }
+        });
+
+        motions.add(new Motion() { // drive right
+            @Override
+            public boolean isEnd() {
+                return !shelly.front.isBusy();
+            }
+
+            @Override
+            public void init()
+            {
+                shelly.driveInches(30, 0, 1000);
+            }
+
+            @Override
+            public void run() {}
+            @Override
+            public void cleanup() { }
         });
     }
 

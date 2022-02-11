@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.shellycode.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.shellycode.Shelly;
 
 @Autonomous(name = "Test Framework")
+@Disabled
 public class TestFramework extends OpMode {
     private Shelly shelly;
 
@@ -21,7 +23,7 @@ public class TestFramework extends OpMode {
         motions[0] = new Motion() {
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -38,7 +40,7 @@ public class TestFramework extends OpMode {
         motions[1] = new Motion() {
             @Override
             public boolean isEnd() {
-                return shelly.lbd.isBusy();
+                return shelly.left.isBusy();
             }
 
             @Override

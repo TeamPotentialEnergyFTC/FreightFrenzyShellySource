@@ -1,22 +1,20 @@
-package org.firstinspires.ftc.shellycode.archive;
+package org.firstinspires.ftc.shellycode.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.shellycode.Consts;
 import org.firstinspires.ftc.shellycode.Shelly;
-import org.firstinspires.ftc.shellycode.auto.Motion;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name = "Framework Blue L1OLD")
-@Disabled
-public class FrameworkBlueL1 extends OpMode {
+@Autonomous(name = "Framework Red L0")
+public class FrameworkRedL0 extends OpMode {
     private Shelly shelly;
     private TFObjectDetector tfod;
 
@@ -24,7 +22,7 @@ public class FrameworkBlueL1 extends OpMode {
     private int stage = 0;
 
     private double cameraCenter = 0;
-    private int barcodePos = 2;
+    private int barcodePos = 0;
 
     @Override
     public void init() {
@@ -44,14 +42,31 @@ public class FrameworkBlueL1 extends OpMode {
         motions.add(new Motion() { // drive forward off wall
             @Override
             public boolean isEnd() {
-                return !shelly.right.isBusy();
+                return shelly.backds.getDistance(DistanceUnit.INCH) > 6 + Consts.DSTBACK_OFFSET;
             }
 
             @Override
             public void init()
             {
-                shelly.driveInches(1, 5, 600);
+                shelly.driveTicks(0, 500, 0);
                 shelly.holdArm(Consts.ARM_LEVELS[barcodePos]);
+            }
+
+            @Override
+            public void run() {}
+            @Override
+            public void cleanup() {}
+        });
+
+        motions.add(new Motion() { // spin for quackapult
+            @Override
+            public boolean isEnd() {
+                return !shelly.left.isBusy();
+            }
+
+            @Override
+            public void init() {
+                shelly.turnDeg(90, 600);
             }
 
             @Override
@@ -63,13 +78,13 @@ public class FrameworkBlueL1 extends OpMode {
         motions.add(new Motion() { // back into quackapult
             @Override
             public boolean isEnd() {
-                return !shelly.front.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
             public void init()
             {
-                shelly.driveInches(25, 0, 1000);
+                shelly.driveInches(0, -13, 1000);
             }
 
             @Override
@@ -87,7 +102,7 @@ public class FrameworkBlueL1 extends OpMode {
             @Override
             public void init() {
                 runtime.reset();
-                shelly.quackapult.setPower(1.5*Consts.AUTO_DEF_SPED);
+                shelly.quackapult.setPower(-1.5*Consts.AUTO_DEF_SPED);
             }
 
             @Override
@@ -99,11 +114,11 @@ public class FrameworkBlueL1 extends OpMode {
 
         motions.add(new Motion() { // drive left away from quackapult
             @Override
-            public boolean isEnd() { return !shelly.left.isBusy(); }
+            public boolean isEnd() { return !shelly.front.isBusy(); }
 
             @Override
             public void init() {
-                shelly.driveInches(0, 32, 1000);
+                shelly.driveInches(-6, 0, 1000);
             }
 
             @Override
@@ -121,7 +136,7 @@ public class FrameworkBlueL1 extends OpMode {
 
             @Override
             public void init() {
-                shelly.turnDeg(-90, 1000);
+                shelly.turnDeg(-10, 1000);
             }
 
             @Override
@@ -138,41 +153,7 @@ public class FrameworkBlueL1 extends OpMode {
 
             @Override
             public void init() {
-                shelly.driveInches(0, -17, 1700);
-            }
-
-            @Override
-            public void run() {}
-            @Override
-            public void cleanup() { }
-        });
-
-        motions.add(new Motion() { // left to line up with hub
-            @Override
-            public boolean isEnd() {
-                return !shelly.left.isBusy();
-            }
-
-            @Override
-            public void init() {
-                shelly.driveInches(0, 32 + barcodePos, 1000);
-            }
-
-            @Override
-            public void run() {}
-            @Override
-            public void cleanup() { shelly.claw.setPosition(Consts.CLAW_MIN); }
-        });
-
-        motions.add(new Motion() { // backwards to line up with storage
-            @Override
-            public boolean isEnd() {
-                return !shelly.left.isBusy();
-            }
-
-            @Override
-            public void init() {
-                shelly.driveInches(0, -38, 1000);
+                shelly.driveInches(0, -10, 1700);
             }
 
             @Override
@@ -189,7 +170,58 @@ public class FrameworkBlueL1 extends OpMode {
 
             @Override
             public void init() {
-                shelly.driveInches(-15, 0, 1000);
+                shelly.driveInches(-24, 0, 1000);
+            }
+
+            @Override
+            public void run() {}
+            @Override
+            public void cleanup() { }
+        });
+
+        motions.add(new Motion() { // fwd to line up with hub
+            @Override
+            public boolean isEnd() {
+                return !shelly.left.isBusy();
+            }
+
+            @Override
+            public void init() {
+                shelly.driveInches(0, 30 + barcodePos, 1000);
+            }
+
+            @Override
+            public void run() {}
+            @Override
+            public void cleanup() { shelly.claw.setPosition(Consts.CLAW_MIN); }
+        });
+
+        motions.add(new Motion() { // backwards to line up with storage
+            @Override
+            public boolean isEnd() {
+                return !shelly.left.isBusy();
+            }
+
+            @Override
+            public void init() {
+                shelly.driveInches(0, -32, 1000);
+            }
+
+            @Override
+            public void run() {}
+            @Override
+            public void cleanup() { }
+        });
+
+        motions.add(new Motion() { // right to line up with storage
+            @Override
+            public boolean isEnd() {
+                return !shelly.front.isBusy();
+            }
+
+            @Override
+            public void init() {
+                shelly.driveInches(12, 0, 1000);
             }
 
             @Override
@@ -201,6 +233,8 @@ public class FrameworkBlueL1 extends OpMode {
 
     @Override
     public void init_loop() {
+        telemetry.addData("Distance Back", shelly.backds.getDistance(DistanceUnit.INCH));
+
         if (tfod == null) { return; }
 
         List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();

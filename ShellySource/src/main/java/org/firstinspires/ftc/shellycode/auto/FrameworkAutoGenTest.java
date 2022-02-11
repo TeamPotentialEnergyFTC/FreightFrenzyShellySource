@@ -4,17 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.shellycode.Consts;
 import org.firstinspires.ftc.shellycode.Shelly;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Autonomous(name = "Framework Victory Lap")
-@Disabled
+//@Disabled
 public class FrameworkAutoGenTest extends OpMode {
     private Shelly shelly;
 
@@ -29,7 +24,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -47,7 +42,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -65,7 +60,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -83,7 +78,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -101,7 +96,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -119,7 +114,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -137,7 +132,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -155,7 +150,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -173,7 +168,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -191,7 +186,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -209,7 +204,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -227,7 +222,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -245,7 +240,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -263,7 +258,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -281,7 +276,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -299,7 +294,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -317,7 +312,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -335,7 +330,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -353,7 +348,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -371,7 +366,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -389,7 +384,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -407,7 +402,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -425,7 +420,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
@@ -443,7 +438,7 @@ public class FrameworkAutoGenTest extends OpMode {
         motions.add(new Motion() { // name me!
             @Override
             public boolean isEnd() {
-                return !shelly.lbd.isBusy();
+                return !shelly.left.isBusy();
             }
 
             @Override
