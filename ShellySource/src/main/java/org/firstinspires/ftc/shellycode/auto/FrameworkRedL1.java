@@ -70,7 +70,7 @@ public class FrameworkRedL1 extends OpMode {
             public void run() {}
             @Override
             public void cleanup() {}
-        });
+        }); //test
 
         motions.add(new Motion() { // back into quackapult
             @Override
