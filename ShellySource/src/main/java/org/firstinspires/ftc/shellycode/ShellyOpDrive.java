@@ -47,7 +47,7 @@ public class ShellyOpDrive extends OpMode {
         double ydir = gamepad1.left_stick_y * snailGain * turboGain;
         double turn = gamepad1.right_stick_x * snailGain * turboGain * 0.5;
 
-        shelly.driveTicks((int)(ydir * Consts.TICKS_PER_POWER), (int)(xdir * Consts.TICKS_PER_POWER), (int)(turn * Consts.TICKS_PER_POWER));
+        shelly.driveTicks((int)(xdir * Consts.TICKS_PER_POWER), -(int)(ydir * Consts.TICKS_PER_POWER), (int)(turn * Consts.TICKS_PER_POWER));
 
         telemetry.addData("Turbo/Snail Telem", "turbo (%.2f), snail (%.2f)", turboGain, snailGain);
         telemetry.addData("Drive Telem", "xdir (%.2f), ydir (%.2f), turn (%.2f), gains (%.2f)", xdir, ydir, turn, snailGain * turboGain);

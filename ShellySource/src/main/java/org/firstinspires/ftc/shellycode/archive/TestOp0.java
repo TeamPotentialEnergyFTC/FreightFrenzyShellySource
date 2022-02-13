@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.shellycode.archive;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -11,7 +12,7 @@ import org.firstinspires.ftc.shellycode.utils.ButtonState;
 import org.firstinspires.ftc.shellycode.utils.Motors;
 
 @TeleOp(name="Test Op 0", group="Test")
-// @Disabled
+@Disabled
 public class TestOp0 extends OpMode {
     // put whatever test stuff you want here
     private Motors motors;

@@ -14,16 +14,16 @@ public class Consts {
     public static final int ARM_VEL = 300; // tps
     public static final int TICKS_PER_POWER = 3000; // tps
     public static final double DRIVE_POS_DEF_TPS = 1000; // seems reasonable
-    public static final int TICKS_PER_INCH = 100;
+    public static final int TICKS_PER_INCH = 103;
 
     public static final double ARM_GAIN = 0.6;
     public static final double SMOL_SPED = 0.03;
 
     public static final double PI = 3.14159265358972;
-    public static final double R = 5.75;
+    public static final double R = 4.375;
     public static final double MAGIK_NUM = 1.295;
 
-    public static final int[] ARM_LEVELS = { 139, 291, 500, 683, 900 };
+    public static final int[] ARM_LEVELS = { 150, 310, 500, 690, 900 };
 
     public static final double AUTO_DEF_SPED = 0.4f;
     public static final double VU_DEF_SPED = 0.04f;
@@ -38,6 +38,8 @@ public class Consts {
     public static final String TFL_OD_MODEL = "shelly_27.tflite";
 //    public static final String TFL_OD_LABELS = "shelly_27_labels.txt";
     public static final String[] TFL_OD_LABELS = new String[] { "TSE" };
+
+    public static final double DSTBACK_OFFSET = 3.8;
 
     public static final float MM_PER_INCH = 25.4f;
     // for positioning robot on field

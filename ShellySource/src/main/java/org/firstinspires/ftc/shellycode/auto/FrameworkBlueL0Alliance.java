@@ -8,21 +8,20 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.shellycode.Consts;
 import org.firstinspires.ftc.shellycode.Shelly;
-import org.firstinspires.ftc.shellycode.utils.TFLiteHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name = "Framework Red L1")
-public class FrameworkRedL1 extends OpMode {
+@Autonomous(name = "Framework Blue L0 Alliance")
+public class FrameworkBlueL0Alliance extends OpMode {
     private Shelly shelly;
     private TFObjectDetector tfod;
 
-    private ArrayList<Motion> motions;
+    private ArrayList<Motion> motions = new ArrayList<>();
     private int stage = 0;
 
     private double cameraCenter = 0;
-    private int barcodePos = 1;
+    private int barcodePos = 0;
 
     @Override
     public void init() {
@@ -37,153 +36,18 @@ public class FrameworkRedL1 extends OpMode {
 
         cameraCenter = vulo.getCameraCalibration().getSize().getWidth() / 2.0;
 
-        motions.add(new Motion() { // drive forward off wall
+        shelly.claw.setPosition(Consts.CLAW_MAX);
+
+        motions.add(new Motion() { // drive right
             @Override
             public boolean isEnd() {
-                return !shelly.rfd.isBusy();
+                return !shelly.front.isBusy();
             }
 
             @Override
             public void init()
             {
-                shelly.driveInches(0, 6, 600);
-            }
-
-            @Override
-            public void run() {}
-            @Override
-            public void cleanup() {}
-        });
-
-        motions.add(new Motion() { // spin for quackapult
-            @Override
-            public boolean isEnd() {
-                return !shelly.lbd.isBusy();
-            }
-
-            @Override
-            public void init() {
-                shelly.turnDeg(90, 600);
-            }
-
-            @Override
-            public void run() {}
-            @Override
-            public void cleanup() {}
-        }); //test
-
-        motions.add(new Motion() { // back into quackapult
-            @Override
-            public boolean isEnd() {
-                return !shelly.lbd.isBusy();
-            }
-
-            @Override
-            public void init()
-            {
-                shelly.driveInches(0, -14, 1000);
-            }
-
-            @Override
-            public void run() {}
-            @Override
-            public void cleanup() {}
-        });
-
-        motions.add(new Motion() { // spin quackapult
-            @Override
-            public boolean isEnd() {
-                return runtime.seconds() > 5;
-            }
-
-            @Override
-            public void init() {
-                runtime.reset();
-                shelly.quackapult.setPower(-1.5*Consts.AUTO_DEF_SPED);
-            }
-
-            @Override
-            public void run() { }
-
-            @Override
-            public void cleanup() { shelly.quackapult.setPower(0); }
-        });
-
-        motions.add(new Motion() { // drive left away from quackapult
-            @Override
-            public boolean isEnd() { return !shelly.lfd.isBusy(); }
-
-            @Override
-            public void init() {
-                shelly.driveInches(-6, 0, 1000);
-            }
-
-            @Override
-            public void run() { }
-
-            @Override
-            public void cleanup() { }
-        });
-
-        motions.add(new Motion() { // back into audience wall
-            @Override
-            public boolean isEnd() {
-                return !shelly.lbd.isBusy();
-            }
-
-            @Override
-            public void init() {
-                shelly.driveInches(0, -10, 1000);
-            }
-
-            @Override
-            public void run() {}
-            @Override
-            public void cleanup() {}
-        });
-
-        motions.add(new Motion() { // left to line up with hub
-            @Override
-            public boolean isEnd() {
-                return !shelly.lbd.isBusy();
-            }
-
-            @Override
-            public void init() {
-                shelly.driveInches(-24, 0, 2000);
-            }
-
-            @Override
-            public void run() {}
-            @Override
-            public void cleanup() {}
-        });
-
-        motions.add(new Motion() { // fwd to line up with hub
-            @Override
-            public boolean isEnd() {
-                return !shelly.lfd.isBusy();
-            }
-
-            @Override
-            public void init() {
-                shelly.driveInches(0, 10, 2000);
-            }
-
-            @Override
-            public void run() {}
-            @Override
-            public void cleanup() {}
-        });
-
-        motions.add(new Motion() { // arm to line up with hub
-            @Override
-            public boolean isEnd() {
-                return !shelly.arm.isBusy();
-            }
-
-            @Override
-            public void init() {
+                shelly.driveInches(13, 0, 1000);
                 shelly.holdArm(Consts.ARM_LEVELS[barcodePos]);
             }
 
@@ -192,13 +56,88 @@ public class FrameworkRedL1 extends OpMode {
             @Override
             public void cleanup() {}
         });
+
+        motions.add(new Motion() { // drive diagonal towards, drop, and go back
+            @Override
+            public boolean isEnd() {
+                return !shelly.left.isBusy();
+            }
+
+            @Override
+            public void init()
+            {
+                shelly.driveInches(16, 18 + barcodePos, 1000);
+            }
+
+            @Override
+            public void run() {}
+            @Override
+            public void cleanup() {
+                shelly.claw.setPosition(Consts.CLAW_MIN);
+            }
+        });
+
+
+        motions.add(new Motion() { // go back
+            @Override
+            public boolean isEnd() {
+                return !shelly.left.isBusy();
+            }
+
+            @Override
+            public void init()
+            {
+                shelly.driveInches(0, -3, 800);
+            }
+
+            @Override
+            public void run() {}
+            @Override
+            public void cleanup() { }
+        });
+
+        motions.add(new Motion() { // drive diagonal towards, drop, and go back
+            @Override
+            public boolean isEnd() {
+                return !shelly.left.isBusy();
+            }
+
+            @Override
+            public void init()
+            {
+                shelly.driveInches(-16, -24 + barcodePos, 1500);
+            }
+
+            @Override
+            public void run() {}
+            @Override
+            public void cleanup() { shelly.holdArm(Consts.ARM_LEVELS[2]); }
+        });
+
+        motions.add(new Motion() { // drive left
+            @Override
+            public boolean isEnd() {
+                return !shelly.front.isBusy();
+            }
+
+            @Override
+            public void init()
+            {
+                shelly.driveInches(-30, 0, 1000);
+            }
+
+            @Override
+            public void run() {}
+            @Override
+            public void cleanup() { shelly.holdArm(50); }
+        });
     }
 
     @Override
     public void init_loop() {
         if (tfod == null) { return; }
 
-        List<Recognition> updatedRecognitions =tfod.getUpdatedRecognitions();
+        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
         if (updatedRecognitions != null) {
             telemetry.addData("Objects detected", updatedRecognitions.size());
 

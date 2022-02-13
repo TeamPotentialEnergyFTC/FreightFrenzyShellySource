@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.shellycode.archive;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.shellycode.utils.Motors;
 import org.firstinspires.ftc.shellycode.utils.VuHelper;
 
 @Autonomous(name = "Test Vu", group = "VU")
+@Disabled
 public class TestVu extends OpMode {
     private Motors motors;
 

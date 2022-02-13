@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.shellycode.archive;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.shellycode.utils.VuHelper;
 import java.util.List;
 
 @Autonomous(name = "Block Dropoff Red + FWD", group = "Autonomous")
+//@Disabled
 public class AutonoOpBlockTFFWD extends OpMode {
     private TFLiteHelper tfLiteHelper;
 

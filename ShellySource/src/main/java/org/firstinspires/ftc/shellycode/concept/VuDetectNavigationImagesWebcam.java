@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XZY;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @TeleOp(name="Detect Navigation Images Webcam", group="Webcam")
-// @Disabled
+@Disabled
 public class VuDetectNavigationImagesWebcam extends LinearOpMode {
     private VuforiaLocalizer vuforia = null;
     private VuforiaTrackables targets = null;

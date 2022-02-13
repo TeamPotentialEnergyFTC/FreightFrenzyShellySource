@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.shellycode.archive;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -11,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.shellycode.Consts;
 
 @TeleOp(name = "Test Op 1 ", group = "Test")
-// @Disabled
+@Disabled
 public class TestOp1 extends OpMode {
     private VuforiaLocalizer vuforia;
 
